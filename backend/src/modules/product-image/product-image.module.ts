@@ -1,0 +1,10 @@
+import { Module } from '@nestjs/common';
+import { ProductImageService } from './product-image.service';
+import { ProductService } from '../product/product.service';
+import { ProductImageController } from './product-image.controller';
+
+@Module({
+  controllers: [ProductImageController],
+  providers: [ProductImageService, ProductService],
+})
+export class ProductImageModule {}
