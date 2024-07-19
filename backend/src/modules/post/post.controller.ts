@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
@@ -18,6 +19,10 @@ import { fileFilter } from './utils/file-filter';
 import { Role } from '../../common/guards';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AddProductDto } from './dto/add-product-dto';
+import { Request } from 'express';
+import { AddRatingDto } from './dto/add-rating-dto';
+import { AddCommentDto } from './dto/add-comment.dto';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @ApiTags('Post')
 @Controller('post')
@@ -63,14 +68,19 @@ export class PostController {
   ) {
     const video = files.find((file) => file.fieldname === 'video');
     const poster = files.find((file) => file.fieldname === 'poster');
-    return this.postService.update(+id, updatePostDto, video?.path, poster?.path);
+    return this.postService.update(
+      +id,
+      updatePostDto,
+      video?.path,
+      poster?.path,
+    );
   }
 
   @WrapperDecorator({
     isPublic: [Role.Admin],
     summary: ['Add product to Post'],
   })
-  @Post('/product/:id')
+  @Post(':id/product')
   addProductToPost(
     @Param('id') id: string,
     @Body() addProductDto: AddProductDto,
@@ -103,5 +113,49 @@ export class PostController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.postService.delete(+id);
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.User],
+    summary: ['Add Rating to Post'],
+  })
+  @Post(':id/rating')
+  addRating(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Body() ratingDto: AddRatingDto,
+  ) {
+    const userId = req.user.id;
+    return this.postService.addRating(userId, +id, ratingDto.star);
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.User],
+    summary: ['Add Comment'],
+  })
+  @Post(':id/comment')
+  addComment(
+    @Param('id') id: string,
+    @Req() req: Request,
+    @Body() commentDto: AddCommentDto,
+  ) {
+    const userId = req.user.id;
+    return this.postService.addComment({
+      postId: +id,
+      userId,
+      ...commentDto,
+    });
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.User],
+    summary: ['Update Comment'],
+  })
+  @Put(':commentId/comment')
+  async updateComment(
+    @Param('commentId') commentId: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+  ) {
+    return this.postService.updateComment(+commentId, updateCommentDto.comment);
   }
 }
