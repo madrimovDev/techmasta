@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -21,6 +22,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { rm } from 'fs/promises';
 import { AddSoftwareDto } from './dto/add-software.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { AddCommentDto } from './dto/add-comment.dto';
+import { Request } from 'express';
 
 @ApiTags('Product')
 @Controller('products')
@@ -45,7 +48,7 @@ export class ProductController {
     isPublic: [Role.Admin],
     summary: ['Add Soft to product'],
   })
-  @Post(':id')
+  @Post(':id/software')
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     type: AddSoftwareDto,
@@ -96,9 +99,9 @@ export class ProductController {
     summary: ['Get Product by id'],
   })
   @Get(':id')
-  getOne(@Param('id') id: string) {
+  async getOne(@Param('id') id: string) {
     try {
-      return this.productService.findOneById(+id);
+      return await this.productService.findOneById(+id);
     } catch {
       throw new NotFoundException();
     }
@@ -109,7 +112,65 @@ export class ProductController {
     summary: ['Remove product'],
   })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productService.remove(+id);
+  async remove(@Param('id') id: string) {
+    try {
+      return await this.productService.remove(+id);
+    } catch {
+      throw new NotFoundException(`Product ${id} not found`);
+    }
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.User],
+    summary: ['Add Rating to Product'],
+  })
+  @Post(':id/rating')
+  async addRating(
+    @Param('id') id: string,
+    @Body() { userId, star }: { userId: number; star: number },
+  ) {
+    return this.productService.addRating(+id, userId, star);
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.User],
+    summary: ['Add Comment to Product'],
+  })
+  @Post(':id/comment')
+  async addComment(
+    @Param('id') id: string,
+    @Body() addCommentDto: AddCommentDto,
+    @Req() req: Request,
+  ) {
+    return this.productService.addComment({
+      ...addCommentDto,
+      userId: req.user.id,
+      productId: +id,
+    });
+  }
+
+  @WrapperDecorator({
+    isPublic: true,
+    summary: ['Update Comment'],
+  })
+  @Put(':commentId/comment')
+  async updateComment(
+    @Param('commentId') commentId: string,
+    @Body() { comment }: { comment: string },
+  ) {
+    return this.productService.updateComment(+commentId, comment);
+  }
+
+  @WrapperDecorator({
+    isPublic: true,
+    summary: ['Remove Comment'],
+  })
+  @Delete(':commentId/comment')
+  async removeComment(@Param('commentId') commentId: string) {
+    try {
+      return await this.productService.removeComment(+commentId);
+    } catch {
+      throw new NotFoundException(`Comment ${commentId} not found`);
+    }
   }
 }

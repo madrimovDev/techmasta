@@ -33,6 +33,7 @@ async function bootstrap(port: string | number) {
     prefix: '/uploads',
   });
   swaggerBootstrap(app);
+
   await seed(app);
   await app.listen(port);
   return port;

@@ -6,12 +6,21 @@ import {
 import { PrismaService } from '../../common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { AddCommentDto } from './dto/add-comment.dto';
 
 @Injectable()
 export class ProductService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createProductDto: CreateProductDto, poster: string) {
+  private async findProductById(id: number) {
+    const product = await this.prismaService.product.findUnique({
+      where: { id },
+    });
+    if (!product) throw new NotFoundException(`Product ${id} not found`);
+    return product;
+  }
+
+  async create(createProductDto: CreateProductDto, poster: string) {
     return this.prismaService.product.create({
       data: {
         ...createProductDto,
@@ -23,18 +32,15 @@ export class ProductService {
   }
 
   async addSoftwareToProduct(id: number, software: string) {
-    const product = await this.prismaService.product.findUnique({
-      where: { id },
-    });
+    const product = await this.findProductById(id);
 
-    if (!product) throw new NotFoundException(`Product ${id} not found`);
-    if (product.productType === 'HARDWARE')
+    if (product.productType === 'HARDWARE') {
       throw new BadRequestException('Product type not allowed');
+    }
+
     return this.prismaService.product.update({
       where: { id },
-      data: {
-        url: software,
-      },
+      data: { url: software },
     });
   }
 
@@ -43,16 +49,10 @@ export class ProductService {
     updateProductDto: UpdateProductDto,
     poster?: string,
   ) {
-    const product = await this.prismaService.product.findUnique({
-      where: { id },
-    });
-
-    if (!product) throw new NotFoundException(`Product ${id} not found`);
+    await this.findProductById(id);
 
     return this.prismaService.product.update({
-      where: {
-        id,
-      },
+      where: { id },
       data: {
         ...updateProductDto,
         poster,
@@ -61,12 +61,10 @@ export class ProductService {
   }
 
   async getAll(category?: string) {
+    const where = category ? { category: { name: category } } : {};
+
     return this.prismaService.product.findMany({
-      where: {
-        category: {
-          name: category,
-        },
-      },
+      where,
       include: {
         category: true,
         Post: true,
@@ -87,10 +85,65 @@ export class ProductService {
   }
 
   async remove(id: number) {
+    await this.findProductById(id);
+
     return this.prismaService.product.delete({
-      where: {
-        id,
+      where: { id },
+    });
+  }
+
+  async addRating(productId: number, userId: number, star: number) {
+    await this.findProductById(productId);
+
+    return this.prismaService.productRating.create({
+      data: {
+        productId,
+        userId,
+        star,
       },
+    });
+  }
+
+  async addComment({
+    productId,
+    userId,
+    ...data
+  }: AddCommentDto & { userId: number; productId: number }) {
+    await this.findProductById(productId);
+
+    return this.prismaService.productComment.create({
+      data: {
+        productId,
+        userId,
+        ...data,
+      },
+    });
+  }
+
+  async updateComment(commentId: number, comment: string) {
+    const existingComment = await this.prismaService.productComment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!existingComment)
+      throw new NotFoundException(`Comment ${commentId} not found`);
+
+    return this.prismaService.productComment.update({
+      where: { id: commentId },
+      data: { comment },
+    });
+  }
+
+  async removeComment(id: number) {
+    const existingComment = await this.prismaService.productComment.findUnique({
+      where: { id },
+    });
+
+    if (!existingComment)
+      throw new NotFoundException(`Comment ${id} not found`);
+
+    return this.prismaService.productComment.delete({
+      where: { id },
     });
   }
 }
