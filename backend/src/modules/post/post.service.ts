@@ -61,6 +61,24 @@ export class PostService {
     });
   }
 
+  async removeProduct(postId: number, productId: number) {
+    await this.findOne(postId);
+    return this.prismaService.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        products: {
+          disconnect: [
+            {
+              id: productId,
+            },
+          ],
+        },
+      },
+    });
+  }
+
   async findAll() {
     const posts = await this.prismaService.post.findMany({
       select: {
@@ -147,5 +165,13 @@ export class PostService {
       },
     });
     return data;
+  }
+
+  removeComment(commentId: number) {
+    return this.prismaService.postComment.delete({
+      where: {
+        id: commentId,
+      },
+    });
   }
 }

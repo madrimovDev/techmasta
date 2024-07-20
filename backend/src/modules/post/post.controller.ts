@@ -89,6 +89,18 @@ export class PostController {
   }
 
   @WrapperDecorator({
+    isPublic: [Role.Admin],
+    summary: ['Remove Product from Post'],
+  })
+  @Delete(':id/product/:productId')
+  deleteProduct(
+    @Param('id') id: string,
+    @Param('productId') productId: string,
+  ) {
+    return this.postService.removeProduct(+id, +productId);
+  }
+
+  @WrapperDecorator({
     isPublic: true,
     summary: ['Get All Posts'],
   })
@@ -157,5 +169,14 @@ export class PostController {
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
     return this.postService.updateComment(+commentId, updateCommentDto.comment);
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.User, Role.Admin],
+    summary: ['Delete Comment'],
+  })
+  @Delete(':commentId/comment')
+  async deleteComment(@Param('commentId') commentId: string) {
+    return this.postService.removeComment(+commentId);
   }
 }
