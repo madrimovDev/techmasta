@@ -24,7 +24,8 @@ model User {
   postRating      PostRating[]
   postComment     PostComment[]
   productRating   ProductRating[]
-  ProductComment  ProductComment[]
+  productComment  ProductComment[]
+  cart            Cart[]
 }
 
 model Role {
@@ -87,7 +88,7 @@ model Product {
   name           String
   description    String
   price          Float
-  url            String?
+  url            String? // software url
   information    ProductInformation[]
   poster         String
   images         ProductImage[]
@@ -99,6 +100,7 @@ model Product {
   createdAt      DateTime             @default(now())
   productRating  ProductRating[]
   productComment ProductComment[]
+  Cart           Cart[]
 }
 
 model ProductRating {
@@ -142,4 +144,30 @@ model ProductInformation {
 enum ProductType {
   SOFTWARE
   HARDWARE
+}
+
+model Cart {
+  id             Int            @id @default(autoincrement())
+  userId         Int
+  user           User           @relation(fields: [userId], references: [id])
+  productId      Int
+  product        Product        @relation(fields: [productId], references: [id])
+  count          Int
+  cartStatus     CartStatus     @default(PENDING)
+  deliveryStatus DeliveryStatus @default(PENDING)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+}
+
+enum DeliveryStatus {
+  PENDING
+  DELIVERING
+  DELIVERED
+  CANCELED
+}
+
+enum CartStatus {
+  PENDING
+  PAID
+  CANCELED
 }

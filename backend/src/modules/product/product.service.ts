@@ -68,6 +68,11 @@ export class ProductService {
       include: {
         category: true,
         Post: true,
+        productRating: true,
+        productComment: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
       },
     });
   }
@@ -100,6 +105,22 @@ export class ProductService {
         productId,
         userId,
         star,
+      },
+    });
+  }
+
+  async getAllComment(productId: number) {
+    return this.prismaService.productComment.findMany({
+      where: {
+        productId: productId,
+      },
+      include: {
+        user: {
+          select: {
+            fullName: true,
+            id: true,
+          },
+        },
       },
     });
   }

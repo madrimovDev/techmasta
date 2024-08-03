@@ -19,7 +19,9 @@ const products = (prefix: string) => ({
 	one: (id: number) => `${prefix}/products/${id}`,
 	image: `${prefix}/product-image`,
 	imageOne: (id: number) => `${prefix}/product-image/${id}`,
-	informationOne: (id: number) => `${prefix}/products-information/${id}`
+	informationOne: (id: number) => `${prefix}/products-information/${id}`,
+	addSoft: (id: number) => `${prefix}/products/${id}/software`,
+	allComments: (productId: number) => `${prefix}/products/${productId}/comment`
 })
 
 const posts = (prefix: string) => ({

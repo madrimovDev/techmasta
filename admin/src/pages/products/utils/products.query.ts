@@ -23,6 +23,18 @@ export interface ProductInformation {
 	value: string
 }
 
+export interface ProductComment {
+	id: number
+	userId: number
+	productId: number
+	comment: string
+	repliedId?: string
+	user: {
+		fullName: string
+		id: number
+	}
+}
+
 export interface Product {
 	id: number
 	name: string
@@ -34,6 +46,8 @@ export interface Product {
 	url: string | null
 	poster: string
 	productType: 'SOFTWARE' | 'HARDWARE'
+	productRating: { star: number }[]
+	productComment: ProductComment[]
 }
 
 export interface ProductWithDetail extends Product {
@@ -192,6 +206,45 @@ export const useRemoveInformation = () => {
 			void queryClient.invalidateQueries({
 				queryKey: [endpoints.products.one(args.productId)]
 			})
+		}
+	})
+}
+
+export const useAddSoftToProduct = () => {
+	const queryClient = useQueryClient()
+	return useMutation({
+		mutationFn: async ({ id, software }: { id: number; software: File }) => {
+			return http.post(
+				endpoints.products.addSoft(id),
+				{
+					software
+				},
+				{
+					headers: {
+						'Content-Type': 'multipart/form-data'
+					}
+				}
+			)
+		},
+		onSuccess(_, arg) {
+			void queryClient.invalidateQueries({
+				queryKey: [endpoints.products.one(arg.id)]
+			})
+			void queryClient.invalidateQueries({
+				queryKey: [endpoints.products.all]
+			})
+		}
+	})
+}
+
+export const useGetProductComments = (id: number) => {
+	return useQuery({
+		queryKey: [endpoints.products.allComments(id)],
+		queryFn: async () => {
+			return http.get<ProductComment[]>(endpoints.products.allComments(id))
+		},
+		select(res) {
+			return res.data
 		}
 	})
 }

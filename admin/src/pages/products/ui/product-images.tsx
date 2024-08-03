@@ -41,7 +41,11 @@ const ProductImages = ({ images, productId }: Props) => {
 						width={100}
 						height={100}
 						className='object-cover'
-						src={`${endpoints.BASE_URL}/${image.url}`}
+						src={
+							image.url.startsWith('http')
+								? image.url
+								: `${endpoints.BASE_URL}/${image.url}`
+						}
 					/>
 				</Dropdown>
 			))}

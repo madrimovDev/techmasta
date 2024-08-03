@@ -74,7 +74,7 @@ const TextEditor = ({ onChange, defaultValue }: Props) => {
 			const editor = quillRef.current.getEditor()
 			editor.setContents(editor.clipboard.convert(defaultValue))
 		}
-	}, [defaultValue])
+	}, [])
 
 	return (
 		<ReactQuill

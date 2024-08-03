@@ -7,7 +7,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     env_file:
-      - ./backend/.env
+      - ./backend/.env_example
     ports:
       - "3022:3022"
     volumes:

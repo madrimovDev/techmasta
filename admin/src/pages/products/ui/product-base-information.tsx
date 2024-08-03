@@ -30,7 +30,11 @@ const ProductBaseInformation = ({ product }: Props) => {
 					height={200}
 					preview={false}
 					className='object-cover'
-					src={`${endpoints.BASE_URL}/${product?.poster}`}
+					src={
+						product?.poster.startsWith('http')
+							? product?.poster
+							: `${endpoints.BASE_URL}/${product?.poster}`
+					}
 				/>
 			</Upload>
 			<Space

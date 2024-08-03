@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="eafc1afb-3bb7-4658-8b83-832ad50330c0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/demo-tech.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blogs/_components/blog-card/blog-card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blogs/_components/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blogs/_components/sidebar/sidebar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blogs/_components/tags/tags.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blogs/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/blogs/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/blogs/blogs.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/header/header.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/header/social-items.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/header/socials.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/hero/hero.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/navbar/menu-items.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/navbar/navbar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/products/products.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/trending/trending-cards.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/components/trending/trending.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/products/[id]/_components/product-image-gallery.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/products/[id]/_components/product-info.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/products/[id]/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/products/[id]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/products/_components/filters.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/products/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/app/products/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/mini-blog-card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/mini-product-card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/product-card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/section-spacer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/trending-card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/vertical-blog-card.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/vertical-blog-cards.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/fake/fake-data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backend/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/../backend/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/next.config.mjs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-lock.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/providers/NextProvider.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/app/providers/NextProvider.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2k16YWmaHgESA0mnr0uiE0oqbC5" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Projects/TechMasta/client&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.standard&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.standard&quot;: &quot;&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;D:\\Projects\\TechMasta\\client\\node_modules\\prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\Projects\\TechMasta\\client\\node_modules\\typescript\\lib&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17011.90" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eafc1afb-3bb7-4658-8b83-832ad50330c0" name="Changes" comment="" />
+      <created>1722438783870</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1722438783870</updated>
+      <workItem from="1722438785004" duration="7650000" />
+      <workItem from="1722452154266" duration="3591000" />
+      <workItem from="1722490069658" duration="11729000" />
+      <workItem from="1722527267905" duration="737000" />
+      <workItem from="1722586339544" duration="288000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

@@ -151,6 +151,15 @@ export class ProductController {
 
   @WrapperDecorator({
     isPublic: true,
+    summary: ['Get all Comment to Product'],
+  })
+  @Get(':productId/comment')
+  async getAllComments(@Param('productId') productId: string) {
+    return this.productService.getAllComment(+productId);
+  }
+
+  @WrapperDecorator({
+    isPublic: true,
     summary: ['Update Comment'],
   })
   @Put(':commentId/comment')
