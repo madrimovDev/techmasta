@@ -64,7 +64,14 @@ export class ProductService {
     const where = category ? { category: { name: category } } : {};
 
     return this.prismaService.product.findMany({
-      where,
+      where: {
+        category: {
+          name: {
+            equals: category,
+            mode: 'insensitive',
+          },
+        },
+      },
       include: {
         category: true,
         Post: true,

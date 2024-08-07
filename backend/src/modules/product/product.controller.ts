@@ -24,6 +24,7 @@ import { AddSoftwareDto } from './dto/add-software.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { Request } from 'express';
+import { GetProductQueryDto } from './dto/get-product-query.dto';
 
 @ApiTags('Product')
 @Controller('products')
@@ -88,10 +89,21 @@ export class ProductController {
   @ApiQuery({
     name: 'category',
     required: false,
+    type: String,
+  })
+  @ApiQuery({
+    name: 'price',
+    required: false,
+    type: String,
+  })
+  @ApiQuery({
+    name: 'rating',
+    required: false,
+    type: String,
   })
   @Get()
-  getAll(@Query('category') category?: string) {
-    return this.productService.getAll(category);
+  getAll(@Query() query: GetProductQueryDto) {
+    return this.productService.getAll(query.category);
   }
 
   @WrapperDecorator({

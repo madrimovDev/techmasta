@@ -7,6 +7,8 @@ import {
 	HomeOutlined,
 	ProductOutlined
 } from '@ant-design/icons'
+import { useContext } from 'react'
+import { ThemeContext } from '../../../app/providers/theme.provider.tsx'
 
 const menuItems: ItemType[] = [
 	{
@@ -33,14 +35,14 @@ const menuItems: ItemType[] = [
 
 const SidebarWidget = () => {
 	const { pathname } = useLocation()
+	const theme = useContext(ThemeContext)
 	const key = pathname.split('/').at(1)
 	return (
-		<Layout.Sider
-			theme='light'
-			collapsible
-		>
+		<Layout.Sider collapsible>
 			<Menu
+				className='bg-transparent'
 				items={menuItems}
+				theme={theme?.mode}
 				selectedKeys={[key ? `/${key}` : pathname]}
 			/>
 		</Layout.Sider>

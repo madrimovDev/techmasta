@@ -6,7 +6,7 @@ import SettingsButton from '../ui/settings-button.tsx'
 
 const HeaderWidget = () => {
 	return (
-		<Layout.Header className='bg-white dark:bg-[#141414]'>
+		<Layout.Header>
 			<div className='h-full flex items-center gap-4'>
 				<Link
 					to='/'
