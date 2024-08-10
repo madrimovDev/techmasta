@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import {
 	AuthPage,
 	CategoriesPage,
+	PostOfficePage,
 	PostPage,
 	PostsPage,
 	ProductsPage
@@ -46,6 +47,10 @@ export const router: Router = createBrowserRouter([
 					{
 						path: 'posts/:id',
 						element: <SuspenseWithLoading element={<PostPage />} />
+					},
+					{
+						path: 'post-office',
+						element: <SuspenseWithLoading element={<PostOfficePage />} />
 					}
 				]
 			}

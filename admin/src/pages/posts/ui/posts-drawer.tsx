@@ -1,19 +1,9 @@
-import {
-	Button,
-	Col,
-	Drawer,
-	Form,
-	Input,
-	notification,
-	Progress,
-	Row,
-	Upload
-} from 'antd'
+import { Button, Col, Drawer, Form, Input, Row, Upload } from 'antd'
 import { usePostDrawer } from '../utils/usePostDrawer'
 import TextEditor from './text-editor.tsx'
 import { InboxOutlined } from '@ant-design/icons'
-import { useCreatePost } from '../utils/posts.query.ts'
-import { useEffect, useState } from 'react'
+import { useCreatePost } from '../utils/posts.query.tsx'
+import { useState } from 'react'
 
 const rules = [
 	{
@@ -45,40 +35,6 @@ const PostsDrawer = () => {
 		})
 	}
 
-	useEffect(() => {
-		if (createPost.mutationStarted) {
-			notification.info({
-				message: 'Post yuklanmoqda',
-				description:
-					'Post yuklash biroz vaqt olishi mumkin. Jarayon yakuniga yetguncha boshqa vazifalarni bajarishingiz mumkin. Jarayon yakuniga yetmaguncha saytni yopmang'
-			})
-		}
-	}, [createPost.mutationStarted])
-
-	const key = 'progress'
-	useEffect(() => {
-		if (createPost.mutationStarted && !createPost.mutationFinished) {
-			notification.open({
-				key,
-				message: 'Post yuklanmoqda',
-				description: <Progress percent={createPost.mutationProgress} />,
-				duration: 0 // Ensure the notification stays until manually closed or updated
-			})
-		} else if (createPost.mutationFinished) {
-			notification.open({
-				key,
-				message: 'Post yuklandi',
-				description: <Progress percent={100} />,
-				duration: 3 // Auto-close after 3 seconds
-			})
-		}
-	}, [
-		createPost.mutationStarted,
-		createPost.mutationProgress,
-		createPost.mutationFinished,
-		key
-	])
-
 	return (
 		<Drawer
 			open={open}
@@ -88,6 +44,7 @@ const PostsDrawer = () => {
 			keyboard={false}
 			title="Post qo'shish"
 		>
+			{createPost.contextHolder}
 			<Row
 				className='h-full'
 				gutter={16}

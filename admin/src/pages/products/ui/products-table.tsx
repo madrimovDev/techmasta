@@ -1,5 +1,5 @@
-import { Badge, Button, Image, Table, Tooltip, Typography } from 'antd'
-import { DeleteButton, TableTitle } from '../../../shared/ui'
+import { Badge, Button, Divider, Image, Table, Tooltip, Typography } from 'antd'
+import { DeleteButton, TableHeader } from '../../../shared/ui'
 import { useProductModal } from '../utils/useProductModal.ts'
 import {
 	Product,
@@ -20,229 +20,230 @@ const ProductsTable = () => {
 	const removeProduct = useRemoveProduct()
 	const onOpen = useProductCommentStore(s => s.onOpen)
 	return (
-		<Table
-			size='small'
-			title={() => (
-				<TableTitle
-					title='Tavarlar'
-					buttonText='Tavar qo`shish'
-					buttonClick={onOpenModal}
-				/>
-			)}
-			bordered
-			scroll={{ y: 550 }}
-			dataSource={products.data}
-			columns={[
-				{
-					key: '#',
-					title: '#',
-					render(_, _data, index) {
-						return index + 1
-					},
-					width: 50
-				},
-				{
-					key: 'poster',
-					title: 'Poster',
-					dataIndex: 'poster',
-					render(value) {
-						const isHttp = value.startsWith('http')
-						return (
-							<Image
-								width={40}
-								height={30}
-								className='object-cover'
-								src={isHttp ? value : `${endpoints.BASE_URL}/${value}`}
-							/>
-						)
-					},
-					width: 60
-				},
-				{
-					key: 'name',
-					title: 'Nomi',
-					dataIndex: 'name',
-					width: 200,
-					render(value, data) {
-						return (
-							<Typography.Link onClick={() => onOpenDrawer(data.id)}>
-								{value}
-							</Typography.Link>
-						)
-					}
-				},
-				{
-					key: 'description',
-					title: 'Izoh',
-					dataIndex: 'description',
-					width: 300,
-					render(value) {
-						return (
-							<Tooltip
-								title={value}
-								placement='top'
-							>
-								<div className='line-clamp-1'>{value}</div>
-							</Tooltip>
-						)
-					}
-				},
-				{
-					key: 'price',
-					title: 'Baxosi',
-					dataIndex: 'price',
-					render(value) {
-						return new Intl.NumberFormat('uz', {
-							style: 'currency',
-							currency: 'UZS',
-							maximumFractionDigits: 0
-						}).format(value)
-					}
-				},
-				{
-					key: 'category',
-					title: 'Katalog',
-					filterMode: 'menu',
-					filters: categories.data?.map(prod => ({
-						text: prod.name,
-						value: prod.id
-					})),
-					onFilter(value, product) {
-						return product.category.id === value
-					},
-					dataIndex: 'category',
-					render(value) {
-						return value.name
-					}
-				},
-				{
-					key: 'type',
-					title: 'Tavar Turi',
-					filters: [
-						{
-							value: 'HARDWARE',
-							text: 'Qurilma / Extiyot qism'
+		<>
+			<TableHeader
+				title='Tavarlar'
+				buttonText='Tavar qo`shish'
+				buttonClick={onOpenModal}
+			/>
+			<Divider />
+			<Table
+				size='small'
+				bordered
+				scroll={{ y: 550 }}
+				dataSource={products.data}
+				columns={[
+					{
+						key: '#',
+						title: '#',
+						render(_, _data, index) {
+							return index + 1
 						},
-						{
-							value: 'SOFTWARE',
-							text: 'Dastur'
-						}
-					],
-					onFilter(value, product) {
-						return product.productType === value
+						width: 50
 					},
-					dataIndex: 'productType'
-				},
-				{
-					key: 'rating',
-					title: 'Rating',
-					dataIndex: 'productRating',
-					sorter(a, b) {
-						const getAverageRating = (ratings: { star: number }[]) => {
-							if (ratings.length === 0) return 0
-							const sum = ratings.reduce((prev, next) => prev + next.star, 0)
-							return sum / ratings.length
-						}
-
-						const aAvg = getAverageRating(a.productRating)
-						const bAvg = getAverageRating(b.productRating)
-
-						return aAvg - bAvg
-					},
-					filters: [
-						{ text: '0-5 ratings', value: '0-5' },
-						{ text: '6-10 ratings', value: '6-10' },
-						{ text: '11+ ratings', value: '11+' },
-						{ text: '5 star ratings', value: '5star' }
-					],
-					onFilter: (value, record) => {
-						const ratingCount = record.productRating.length
-						const fiveStarCount = record.productRating.filter(
-							r => r.star === 5
-						).length
-
-						switch (value) {
-							case '0-5':
-								return ratingCount <= 5
-							case '6-10':
-								return ratingCount > 5 && ratingCount <= 10
-							case '11+':
-								return ratingCount > 10
-							case '5star':
-								return fiveStarCount > 0
-							default:
-								return true
-						}
-					},
-					render(value: Product['productRating']) {
-						const sum =
-							value
-								.map(s => s.star)
-								.reduce((prev, next) => {
-									return prev + next
-								}, 0) / value.length
-						return (
-							<span>
-								{value.length} / <b>{sum}</b>
-							</span>
-						)
-					}
-				},
-				{
-					key: 'comments',
-					title: 'Izohlar',
-
-					dataIndex: 'productComment',
-					render(value, product) {
-						return (
-							<span className='space-x-2'>
-								<span>{value.length}</span>
-								<Button
-									onClick={() => onOpen(product.id)}
-									icon={<MessageOutlined />}
-									size='small'
+					{
+						key: 'poster',
+						title: 'Poster',
+						dataIndex: 'poster',
+						render(value) {
+							const isHttp = value.startsWith('http')
+							return (
+								<Image
+									width={40}
+									height={30}
+									className='object-cover'
+									src={isHttp ? value : `${endpoints.BASE_URL}/${value}`}
 								/>
-							</span>
-						)
-					}
-				},
-				{
-					key: 'url',
-					title: 'Dastur',
-					dataIndex: 'url',
-					render(value, prod) {
-						return prod.productType === 'HARDWARE' ? (
-							''
-						) : value ? (
-							<Badge
-								status='success'
-								text='Mavjud'
-							/>
-						) : (
-							<Badge
-								status='error'
-								text='Mavjud emas'
-							/>
-						)
-					}
-				},
-				{
-					key: 'actions',
-					width: 80,
-					render(_, data) {
-						return (
-							<Button.Group size={'small'}>
-								<DeleteButton
-									onConfirm={() => {
-										removeProduct.mutate(data.id)
-									}}
+							)
+						},
+						width: 60
+					},
+					{
+						key: 'name',
+						title: 'Nomi',
+						dataIndex: 'name',
+						width: 200,
+						render(value, data) {
+							return (
+								<Typography.Link onClick={() => onOpenDrawer(data.id)}>
+									{value}
+								</Typography.Link>
+							)
+						}
+					},
+					{
+						key: 'description',
+						title: 'Izoh',
+						dataIndex: 'description',
+						width: 300,
+						render(value) {
+							return (
+								<Tooltip
+									title={value}
+									placement='top'
+								>
+									<div className='line-clamp-1'>{value}</div>
+								</Tooltip>
+							)
+						}
+					},
+					{
+						key: 'price',
+						title: 'Baxosi',
+						dataIndex: 'price',
+						render(value) {
+							return new Intl.NumberFormat('uz', {
+								style: 'currency',
+								currency: 'UZS',
+								maximumFractionDigits: 0
+							}).format(value)
+						}
+					},
+					{
+						key: 'category',
+						title: 'Katalog',
+						filterMode: 'menu',
+						filters: categories.data?.map(prod => ({
+							text: prod.name,
+							value: prod.id
+						})),
+						onFilter(value, product) {
+							return product.category.id === value
+						},
+						dataIndex: 'category',
+						render(value) {
+							return value.name
+						}
+					},
+					{
+						key: 'type',
+						title: 'Tavar Turi',
+						filters: [
+							{
+								value: 'HARDWARE',
+								text: 'Qurilma / Extiyot qism'
+							},
+							{
+								value: 'SOFTWARE',
+								text: 'Dastur'
+							}
+						],
+						onFilter(value, product) {
+							return product.productType === value
+						},
+						dataIndex: 'productType'
+					},
+					{
+						key: 'rating',
+						title: 'Rating',
+						dataIndex: 'productRating',
+						sorter(a, b) {
+							const getAverageRating = (ratings: { star: number }[]) => {
+								if (ratings.length === 0) return 0
+								const sum = ratings.reduce((prev, next) => prev + next.star, 0)
+								return sum / ratings.length
+							}
+
+							const aAvg = getAverageRating(a.productRating)
+							const bAvg = getAverageRating(b.productRating)
+
+							return aAvg - bAvg
+						},
+						filters: [
+							{ text: '0-5 ratings', value: '0-5' },
+							{ text: '6-10 ratings', value: '6-10' },
+							{ text: '11+ ratings', value: '11+' },
+							{ text: '5 star ratings', value: '5star' }
+						],
+						onFilter: (value, record) => {
+							const ratingCount = record.productRating.length
+							const fiveStarCount = record.productRating.filter(
+								r => r.star === 5
+							).length
+
+							switch (value) {
+								case '0-5':
+									return ratingCount <= 5
+								case '6-10':
+									return ratingCount > 5 && ratingCount <= 10
+								case '11+':
+									return ratingCount > 10
+								case '5star':
+									return fiveStarCount > 0
+								default:
+									return true
+							}
+						},
+						render(value: Product['productRating']) {
+							const sum =
+								value
+									.map(s => s.star)
+									.reduce((prev, next) => {
+										return prev + next
+									}, 0) / value.length
+							return (
+								<span>
+									{value.length} / <b>{sum}</b>
+								</span>
+							)
+						}
+					},
+					{
+						key: 'comments',
+						title: 'Izohlar',
+
+						dataIndex: 'productComment',
+						render(value, product) {
+							return (
+								<span className='space-x-2'>
+									<span>{value.length}</span>
+									<Button
+										onClick={() => onOpen(product.id)}
+										icon={<MessageOutlined />}
+										size='small'
+									/>
+								</span>
+							)
+						}
+					},
+					{
+						key: 'url',
+						title: 'Dastur',
+						dataIndex: 'url',
+						render(value, prod) {
+							return prod.productType === 'HARDWARE' ? (
+								''
+							) : value ? (
+								<Badge
+									status='success'
+									text='Mavjud'
 								/>
-							</Button.Group>
-						)
+							) : (
+								<Badge
+									status='error'
+									text='Mavjud emas'
+								/>
+							)
+						}
+					},
+					{
+						key: 'actions',
+						width: 80,
+						render(_, data) {
+							return (
+								<Button.Group size={'small'}>
+									<DeleteButton
+										onConfirm={() => {
+											removeProduct.mutate(data.id)
+										}}
+									/>
+								</Button.Group>
+							)
+						}
 					}
-				}
-			]}
-		/>
+				]}
+			/>
+		</>
 	)
 }
 

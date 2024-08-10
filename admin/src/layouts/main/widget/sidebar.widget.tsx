@@ -3,6 +3,7 @@ import { ItemType } from 'antd/es/menu/interface'
 import { Link, useLocation } from 'react-router-dom'
 import {
 	ContainerOutlined,
+	DeliveredProcedureOutlined,
 	FlagOutlined,
 	HomeOutlined,
 	ProductOutlined
@@ -30,6 +31,11 @@ const menuItems: ItemType[] = [
 		key: '/posts',
 		label: <Link to='/posts'>Postlar</Link>,
 		icon: <ContainerOutlined />
+	},
+	{
+		key: '/post-office',
+		label: <Link to='/post-office'>Pochta</Link>,
+		icon: <DeliveredProcedureOutlined />
 	}
 ]
 

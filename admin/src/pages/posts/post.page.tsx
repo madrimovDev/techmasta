@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useGetPost, useUpdatePost } from './utils/posts.query.ts'
+import { useGetPost, useUpdatePost } from './utils/posts.query.tsx'
 import { Col, Divider, Dropdown, Image, Row, Spin, Typography } from 'antd'
 import { endpoints } from '../../app/http'
 import 'quill/dist/quill.snow.css'

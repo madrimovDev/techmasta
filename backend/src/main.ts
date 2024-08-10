@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './modules';
+import { AppModule } from './app.module';
 import { config } from 'dotenv';
 import { seed, swaggerBootstrap } from './common';
 import { Logger, ValidationPipe } from '@nestjs/common';

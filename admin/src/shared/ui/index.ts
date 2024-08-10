@@ -1,5 +1,5 @@
 export { default as DeleteButton } from './delete-button'
 export { default as EditButton } from './edit-button'
 export { default as SuspenseWithLoading } from './suspense-with-loading'
-export { default as TableTitle } from './table-title'
+export { default as TableHeader } from './table-header.tsx'
 export { default as EditableSelect } from './editable-select'

@@ -9,7 +9,7 @@ const MainLayout = () => {
 			<HeaderWidget />
 			<Layout>
 				<SidebarWidget />
-				<Layout.Content className='p-4 relative h-full overflow-y-auto'>
+				<Layout.Content className='relative h-full overflow-y-auto p-10'>
 					<Outlet />
 				</Layout.Content>
 			</Layout>

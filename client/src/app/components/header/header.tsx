@@ -6,7 +6,7 @@ export const Header = () => {
 		<header className='bg-black py-1 text-white hidden sm:block text-sm font-bold'>
 			<div className='container flex justify-between items-center'>
 				<Socials />
-				<Link href='/'>KIRISH</Link>
+				<Link href='/authorization/login'>KIRISH</Link>
 			</div>
 		</header>
 	)

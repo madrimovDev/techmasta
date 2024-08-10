@@ -1,5 +1,4 @@
 'use client'
-import { IProduct } from '@/fake/fake-data'
 import { useState } from 'react'
 import { Image } from '@nextui-org/image'
 import NextImage from 'next/image'
@@ -8,10 +7,11 @@ import 'swiper/css'
 import 'swiper/css/autoplay'
 import { Autoplay } from 'swiper/modules'
 import { ScrollShadow } from '@nextui-org/react'
+import { Product } from '@/app/products/[id]/_utils/fetch-product'
 
 interface Props {
 	image: string
-	images: IProduct['images']
+	images: Product['images']
 }
 
 export const ProductImageGallery = ({ images, image }: Props) => {
@@ -22,7 +22,7 @@ export const ProductImageGallery = ({ images, image }: Props) => {
 	const [activeImg, setActiveImg] = useState<string>(image)
 
 	return (
-		<div className='grid grid-cols-6 gap-2 h-[500px]'>
+		<div className='grid grid-cols-6 gap-2 h-[500px] sticky top-36'>
 			<div className='col-span-1 flex gap-4 h-[500px]'>
 				<ScrollShadow>
 					<Swiper

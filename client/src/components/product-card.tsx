@@ -9,11 +9,11 @@ import {
 } from '@nextui-org/react'
 import NextImage from 'next/image'
 import { BsCartCheck, BsCartPlus, BsHeart } from 'react-icons/bs'
-import { IProduct } from '@/fake/fake-data'
 import NextLink from 'next/link'
+import { Product } from '@/app/products/_utils/fetch-products'
 
 interface Props {
-	product: IProduct
+	product: Product
 }
 
 export const ProductCard = ({ product }: Props) => {
@@ -29,21 +29,21 @@ export const ProductCard = ({ product }: Props) => {
 							color='danger'
 							variant='faded'
 							startContent={<BsHeart />}>
-							{product.likes}
+							{product.productRating.length}
 						</Chip>
 					</div>
 					<Image
-						alt={product.title}
+						alt={product.name}
 						removeWrapper
 						className='w-full h-full object-cover z-0'
 						as={NextImage}
-						src={product.image}
+						src={product.poster}
 						width={300}
 						height={400}
 					/>
 				</div>
 				<div className='mt-4 space-y-2'>
-					<h3 className='text-large font-medium'>{product.title}</h3>
+					<h3 className='text-large font-medium'>{product.name}</h3>
 					<Tooltip
 						content={product.description}
 						className='max-w-sm'>

@@ -74,9 +74,11 @@ export class ProductService {
       },
       include: {
         category: true,
-        Post: true,
+        post: true,
         productRating: true,
         productComment: true,
+        information: true,
+        images: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -90,6 +92,12 @@ export class ProductService {
       include: {
         images: true,
         information: true,
+        productComment: {
+          include: {
+            user: true,
+          },
+        },
+        productRating: true,
       },
     });
     if (!product) throw new NotFoundException(`Product ${id} not found`);

@@ -1,15 +1,34 @@
-import { IProduct } from '@/fake/fake-data'
-import { Button, ButtonGroup, Divider } from '@nextui-org/react'
-import { BsBag, BsCartPlus, BsDash, BsPlus } from 'react-icons/bs'
+'use client'
+import {
+	Button,
+	ButtonGroup,
+	Divider,
+	Listbox,
+	ListboxItem
+} from '@nextui-org/react'
+import {
+	BsBag,
+	BsCartPlus,
+	BsDash,
+	BsPlus,
+	BsStar,
+	BsStarFill
+} from 'react-icons/bs'
+import { Product } from '@/app/products/[id]/_utils/fetch-product'
 
 interface Props {
-	product: IProduct
+	product: Product
+}
+
+const calculateRating = (ratings: Product['productRating']) => {
+	const sum = ratings.reduce((prev, current) => prev + current.star, 0)
+	return Math.floor(sum / ratings.length)
 }
 
 export const ProductInfo = ({ product }: Props) => {
 	return (
 		<div>
-			<h1 className='text-5xl font-bold'>{product.title}</h1>
+			<h1 className='text-5xl font-bold'>{product.name}</h1>
 			<Divider className='my-4' />
 			<p className='text-large'>{product.description}</p>
 			<div className='my-4'>
@@ -36,6 +55,19 @@ export const ProductInfo = ({ product }: Props) => {
 					}).format(product.price)}
 				</p>
 			</div>
+			<div className='flex gap-2 items-center text-4xl my-8'>
+				<div className='flex gap-2 text-orange-500'>
+					{Array.from({ length: 5 }).map((_, i) => (
+						<span key={i}>
+							{i < calculateRating(product.productRating) ? (
+								<BsStarFill />
+							) : (
+								<BsStar className='hover:fill-orange-500' />
+							)}
+						</span>
+					))}
+				</div>
+			</div>
 			<div className='flex gap-4'>
 				<Button
 					size='lg'
@@ -54,6 +86,19 @@ export const ProductInfo = ({ product }: Props) => {
 					Sotib Olish
 				</Button>
 			</div>
+			<Divider className='my-8' />
+			<h2 className='text-large font-bold mb-4'>Tovar Ma&apos;lumotlar</h2>
+			<Listbox>
+				{product.information.map((info) => {
+					return (
+						<ListboxItem
+							key={info.id}
+							startContent={<b>{info.name}</b>}
+							endContent={info.value}
+						/>
+					)
+				})}
+			</Listbox>
 		</div>
 	)
 }

@@ -7,15 +7,21 @@ interface Props {
 	title: string
 }
 
-const TableTitle = ({ title, buttonClick, buttonText }: Props) => {
+const TableHeader = ({ title, buttonClick, buttonText }: Props) => {
 	return (
 		<Flex
 			align='center'
 			justify='space-between'
 		>
-			<Typography.Title level={3}>{title}</Typography.Title>
+			<Typography.Title
+				level={1}
+				className='mb-0'
+			>
+				{title}
+			</Typography.Title>
 			<Button
 				type='primary'
+				size='large'
 				icon={<PlusOutlined />}
 				onClick={buttonClick}
 			>
@@ -25,4 +31,4 @@ const TableTitle = ({ title, buttonClick, buttonText }: Props) => {
 	)
 }
 
-export default TableTitle
+export default TableHeader

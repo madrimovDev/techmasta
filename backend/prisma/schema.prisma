@@ -25,7 +25,7 @@ model User {
   postComment     PostComment[]
   productRating   ProductRating[]
   productComment  ProductComment[]
-  cart            Cart[]
+  orders          Order[]
 }
 
 model Role {
@@ -84,23 +84,25 @@ model Category {
 }
 
 model Product {
-  id             Int                  @id @default(autoincrement())
-  name           String
-  description    String
-  price          Float
-  url            String? // software url
-  information    ProductInformation[]
-  poster         String
-  images         ProductImage[]
-  productType    ProductType
-  category       Category             @relation(fields: [categoryId], references: [id])
-  Post           Post?                @relation(fields: [postId], references: [id])
-  postId         Int?
-  categoryId     Int
-  createdAt      DateTime             @default(now())
-  productRating  ProductRating[]
-  productComment ProductComment[]
-  Cart           Cart[]
+  id                 Int                  @id @default(autoincrement())
+  name               String
+  description        String
+  price              Float
+  discount           Int?
+  discountAfterCount Int?
+  url                String? // software url
+  information        ProductInformation[]
+  poster             String
+  images             ProductImage[]
+  productType        ProductType
+  category           Category             @relation(fields: [categoryId], references: [id])
+  post               Post?                @relation(fields: [postId], references: [id])
+  postId             Int?
+  categoryId         Int
+  createdAt          DateTime             @default(now())
+  productRating      ProductRating[]
+  productComment     ProductComment[]
+  orderItem          OrderItem[]
 }
 
 model ProductRating {
@@ -127,7 +129,7 @@ model ProductComment {
 model ProductImage {
   id        Int      @id @default(autoincrement())
   url       String
-  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int
   createdAt DateTime @default(now())
 }
@@ -136,7 +138,7 @@ model ProductInformation {
   id        Int      @id @default(autoincrement())
   name      String
   value     String
-  Product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int?
   createdAt DateTime @default(now())
 }
@@ -146,28 +148,48 @@ enum ProductType {
   HARDWARE
 }
 
-model Cart {
-  id             Int            @id @default(autoincrement())
-  userId         Int
-  user           User           @relation(fields: [userId], references: [id])
-  productId      Int
-  product        Product        @relation(fields: [productId], references: [id])
-  count          Int
-  cartStatus     CartStatus     @default(PENDING)
-  deliveryStatus DeliveryStatus @default(PENDING)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+model Order {
+  id                Int             @id @default(autoincrement())
+  userId            Int
+  user              User            @relation(fields: [userId], references: [id])
+  paymentStatus     PaymentStatus   @default(DEFAULT)
+  shippingServiceId Int
+  shippingService   ShippingService @relation(fields: [shippingServiceId], references: [id])
+  deliveryStatus    DeliveryStatus  @default(DEFAULT)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  orderItem         OrderItem[]
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   Int
+  quantity  Int
 }
 
 enum DeliveryStatus {
+  DEFAULT
   PENDING
   DELIVERING
   DELIVERED
   CANCELED
 }
 
-enum CartStatus {
+enum PaymentStatus {
+  DEFAULT
   PENDING
   PAID
   CANCELED
+}
+
+model ShippingService {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  price       Float
+  unit        String
+  Order       Order[]
 }

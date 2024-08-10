@@ -1,6 +1,6 @@
 import { Blogs, Hero, Products, Trending } from '@/app/components'
 
-const Page = () => {
+const Page = async () => {
 	return (
 		<div>
 			<Hero />

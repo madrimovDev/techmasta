@@ -1,7 +1,7 @@
-import { Button, Image, Input, Table, Typography } from 'antd'
-import { DeleteButton, TableTitle } from '../../../shared/ui'
+import { Button, Divider, Image, Input, Table, Typography } from 'antd'
+import { DeleteButton, TableHeader } from '../../../shared/ui'
 import { usePostDrawer } from '../utils/usePostDrawer.ts'
-import { useGetPosts, useRemovePost } from '../utils/posts.query.ts'
+import { useGetPosts, useRemovePost } from '../utils/posts.query.tsx'
 import { endpoints } from '../../../app/http'
 import { Link } from 'react-router-dom'
 import type { ColumnsType } from 'antd/es/table'
@@ -106,17 +106,18 @@ const PostsTable = () => {
 	]
 
 	return (
-		<Table
-			title={() => (
-				<TableTitle
-					title='Postlar'
-					buttonText="Post qo'shish"
-					buttonClick={onOpen}
-				/>
-			)}
-			dataSource={posts.data}
-			columns={columns}
-		/>
+		<>
+			<TableHeader
+				title='Postlar'
+				buttonText="Post qo'shish"
+				buttonClick={onOpen}
+			/>
+			<Divider />
+			<Table
+				dataSource={posts.data}
+				columns={columns}
+			/>
+		</>
 	)
 }
 

@@ -1,8 +1,10 @@
 import { fakeProducts } from '@/fake/fake-data'
 import { ProductCard } from '@/components'
 import { Filters } from '@/app/products/_components/filters'
+import { getProducts } from '@/app/products/_utils/fetch-products'
 
-const Page = () => {
+const Page = async () => {
+	const products = await getProducts()
 	return (
 		<div className='py-10'>
 			<div className='grid grid-cols-12 gap-8'>
@@ -10,7 +12,7 @@ const Page = () => {
 					<Filters />
 				</div>
 				<div className='col-span-10 grid grid-cols-4 gap-8'>
-					{fakeProducts.map((product) => (
+					{products.map((product) => (
 						<ProductCard
 							product={product}
 							key={product.id}

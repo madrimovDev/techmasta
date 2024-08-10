@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { endpoints, http } from '../../../app/http'
 import { useCallback, useState } from 'react'
 import { Product } from '../../products/utils/products.query.ts'
+import { notification, Progress } from 'antd'
+import { AxiosError } from 'axios'
 
 interface CreatePost {
 	title: string
@@ -35,7 +37,8 @@ export const useCreatePost = () => {
 	const [mutationStarted, setMutationStarted] = useState(false)
 	const [mutationFinished, setMutationFinished] = useState(false)
 	const [mutationProgress, setMutationProgress] = useState(0)
-
+	const [api, contextHolder] = notification.useNotification()
+	const [norifyClosed, setNorifyClosed] = useState(false)
 	const mutationFn = useCallback(
 		async (data: CreatePost) => {
 			return http.post(endpoints.posts.all, data, {
@@ -45,30 +48,56 @@ export const useCreatePost = () => {
 				onUploadProgress(e) {
 					const progress = Math.floor((e.progress ?? 0) * 100)
 					setMutationProgress(progress)
-					if (!mutationStarted) {
+					if (!mutationStarted && !norifyClosed) {
 						setMutationStarted(true)
 						setMutationFinished(false)
+						api.open({
+							key: data.title,
+							type: 'info',
+							message: 'Post yuklanmoqda',
+							duration: null,
+							description: <Progress percent={progress} />,
+							onClose() {
+								console.log(norifyClosed)
+								setNorifyClosed(true)
+							}
+						})
 					}
 				}
 			})
 		},
-		[mutationStarted] // Depend on `mutationStarted` to ensure `onUploadProgress` works correctly
+		[mutationStarted, norifyClosed, api] // Depend on `mutationStarted` to ensure `onUploadProgress` works correctly
 	)
 
 	const mutation = useMutation({
 		mutationFn,
-		onSuccess() {
+		onSuccess(_, arg) {
 			setMutationFinished(true)
 			setMutationStarted(false)
 			setMutationProgress(0)
+			api.open({
+				key: arg.title,
+				message: 'Post yuklandi',
+				type: 'success',
+				description: <Progress percent={100} />
+			})
+		},
+		onError(err: AxiosError, args) {
+			setMutationFinished(true)
+			setMutationStarted(false)
+			setMutationProgress(0)
+			api.open({
+				key: args.title,
+				message: 'Post yuklandishda xatolik',
+				type: 'error',
+				description: <pre>{JSON.stringify(err.response?.data)}</pre>
+			})
 		}
 	})
 
 	return {
 		...mutation,
-		mutationStarted,
-		mutationFinished,
-		mutationProgress
+		contextHolder
 	}
 }
 

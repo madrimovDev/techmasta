@@ -20,8 +20,8 @@ const AntProvider = ({ children }: PropsWithChildren) => {
 					},
 					Layout: {
 						siderBg: contextValue?.mode === 'dark' ? '#0E0E0F90' : '#ffffff90',
-						bodyBg: contextValue?.mode === 'dark' ? '#0b0b0b70' : '#f1f1f170',
-						headerBg: contextValue?.mode === 'dark' ? '#0E0E0FC4' : '#ffffffC4',
+						bodyBg: contextValue?.mode === 'dark' ? '#0b0b0bA0' : '#f1f1f170',
+						headerBg: contextValue?.mode === 'dark' ? '#0E0E0FD4' : '#ffffffC4',
 						footerBg: contextValue?.mode === 'dark' ? '#0E0E0F30' : '#ffffff30',
 						triggerBg: 'transparent',
 						triggerColor: contextValue?.mode === 'dark' ? 'white' : 'black',
