@@ -29,11 +29,17 @@ const posts = (prefix: string) => ({
 	one: (id: number) => `${prefix}/post/${id}`
 })
 
+const shippingServices = (prefix: string) => ({
+	all: `${prefix}/shipping-service`,
+	one: (id: number) => `${prefix}/shipping-service/${id}`
+})
+
 export const endpoints = {
 	BASE_URL,
 	PREFIX,
 	auth: auth(`${BASE_URL}${PREFIX}`),
 	categories: categories(`${BASE_URL}${PREFIX}`),
 	products: products(`${BASE_URL}${PREFIX}`),
-	posts: posts(`${BASE_URL}${PREFIX}`)
+	posts: posts(`${BASE_URL}${PREFIX}`),
+	shippingServices: shippingServices(`${BASE_URL}${PREFIX}`)
 }

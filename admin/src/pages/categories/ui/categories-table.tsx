@@ -1,4 +1,4 @@
-import { Button, Divider, Table } from 'antd'
+import { Button, Table } from 'antd'
 import {
 	useDeleteCategory,
 	useGetCategories
@@ -18,7 +18,6 @@ const CategoriesTable = () => {
 				buttonText='Katalog qo`shish'
 				buttonClick={() => onOpen()}
 			/>
-			<Divider />
 			<Table
 				loading={isLoading || remove.isPending}
 				dataSource={data}

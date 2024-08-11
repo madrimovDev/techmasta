@@ -33,8 +33,8 @@ const menuItems: ItemType[] = [
 		icon: <ContainerOutlined />
 	},
 	{
-		key: '/post-office',
-		label: <Link to='/post-office'>Pochta</Link>,
+		key: '/shipping-services',
+		label: <Link to='/shipping-services'>Pochtalar</Link>,
 		icon: <DeliveredProcedureOutlined />
 	}
 ]

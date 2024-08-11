@@ -1,4 +1,4 @@
-import { Badge, Button, Divider, Image, Table, Tooltip, Typography } from 'antd'
+import { Badge, Button, Image, Table, Tooltip, Typography } from 'antd'
 import { DeleteButton, TableHeader } from '../../../shared/ui'
 import { useProductModal } from '../utils/useProductModal.ts'
 import {
@@ -26,7 +26,6 @@ const ProductsTable = () => {
 				buttonText='Tavar qo`shish'
 				buttonClick={onOpenModal}
 			/>
-			<Divider />
 			<Table
 				size='small'
 				bordered

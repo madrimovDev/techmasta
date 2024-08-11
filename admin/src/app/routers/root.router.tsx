@@ -49,7 +49,7 @@ export const router: Router = createBrowserRouter([
 						element: <SuspenseWithLoading element={<PostPage />} />
 					},
 					{
-						path: 'post-office',
+						path: 'shipping-services',
 						element: <SuspenseWithLoading element={<PostOfficePage />} />
 					}
 				]

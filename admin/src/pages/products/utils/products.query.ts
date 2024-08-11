@@ -93,7 +93,7 @@ export const useGetProduct = (id: number, enable = false) => {
 		queryKey: [endpoints.products.one(id)],
 		queryFn: () => http.get<ProductWithDetail>(endpoints.products.one(id)),
 		select: data => data.data,
-		enabled: enable
+		enabled: enable && id > 0
 	})
 }
 
@@ -245,6 +245,7 @@ export const useGetProductComments = (id: number) => {
 		},
 		select(res) {
 			return res.data
-		}
+		},
+		enabled: id > 0
 	})
 }
