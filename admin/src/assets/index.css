@@ -17,8 +17,8 @@ html {
 }
 
 
-.ant-layout-header, .ant-layout, .ant-table{
-    @apply backdrop-blur relative
+.ant-layout-header, .ant-layout, .ant-table {
+    @apply backdrop-blur
 }
 
 .ant-layout:after {

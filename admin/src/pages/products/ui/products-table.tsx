@@ -22,14 +22,12 @@ const ProductsTable = () => {
 	return (
 		<>
 			<TableHeader
-				title='Tavarlar'
-				buttonText='Tavar qo`shish'
+				title='Tovarlar'
+				buttonText='Tovar qo`shish'
 				buttonClick={onOpenModal}
 			/>
 			<Table
-				size='small'
 				bordered
-				scroll={{ y: 550 }}
 				dataSource={products.data}
 				columns={[
 					{
@@ -116,7 +114,7 @@ const ProductsTable = () => {
 					},
 					{
 						key: 'type',
-						title: 'Tavar Turi',
+						title: 'Tovar Turi',
 						filters: [
 							{
 								value: 'HARDWARE',

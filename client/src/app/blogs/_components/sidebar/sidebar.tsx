@@ -19,7 +19,7 @@ export const Sidebar = () => {
 			</div>
 			<div className='space-y-8'>
 				<h2 className='text-large font-bold bg-gray-50 p-4 rounded-medium'>
-					Top Tavarlar
+					Top Tovarlar
 				</h2>
 				{fakeProducts.slice(0, 6).map((prod) => (
 					<MiniProductCard

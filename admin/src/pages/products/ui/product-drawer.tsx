@@ -16,7 +16,7 @@ const ProductDrawer = () => {
 			open={open}
 			destroyOnClose
 			onClose={onClose}
-			title="Tavar Ma'lumoti"
+			title="Tovar Ma'lumoti"
 			width={800}
 		>
 			<ProductBaseInformation product={product} />
@@ -51,13 +51,13 @@ const ProductDrawer = () => {
 			)}
 
 			<Divider />
-			<Typography.Title level={3}>Tavar Ma'lumotlari</Typography.Title>
+			<Typography.Title level={3}>Tovar Ma'lumotlari</Typography.Title>
 			<ProductInformationTable
 				productId={product?.id}
 				information={product?.information}
 			/>
 			<Divider />
-			<Typography.Title level={3}>Tavar Rasmlari</Typography.Title>
+			<Typography.Title level={3}>Tovar Rasmlari</Typography.Title>
 			<ProductImages
 				productId={product?.id}
 				images={product?.images}

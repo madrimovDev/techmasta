@@ -48,6 +48,8 @@ export interface Product {
 	productType: 'SOFTWARE' | 'HARDWARE'
 	productRating: { star: number }[]
 	productComment: ProductComment[]
+	discount?: number
+	discountAfterCount?: number
 }
 
 export interface ProductWithDetail extends Product {

@@ -75,7 +75,7 @@ const ProductBaseInformation = ({ product }: Props) => {
 							description: 'Izoh',
 							price: 'Baxosi',
 							category: 'Katalog',
-							productType: 'Tavar Turi'
+							productType: 'Tovar Turi'
 						}
 						if (!includeKeys.includes(item[0])) return
 						return (

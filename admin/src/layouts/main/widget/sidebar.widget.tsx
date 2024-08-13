@@ -24,7 +24,7 @@ const menuItems: ItemType[] = [
 	},
 	{
 		key: '/products',
-		label: <Link to='/products'>Tavarlar</Link>,
+		label: <Link to='/products'>Tovarlar</Link>,
 		icon: <ProductOutlined />
 	},
 	{

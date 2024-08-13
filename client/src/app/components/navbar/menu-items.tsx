@@ -8,7 +8,7 @@ export const menuItems = [
 		slug: '/blogs'
 	},
 	{
-		label: 'Tavarlar',
+		label: 'Tovarlar',
 		slug: '/products'
 	}
 ]

@@ -2,7 +2,7 @@ import { Breadcrumb } from 'antd'
 import { Link, useLocation } from 'react-router-dom'
 
 const mappedBreadcrumbs = {
-	products: 'Tavarlar',
+	products: 'Tovarlar',
 	posts: 'Postlar',
 	categories: 'Kategoriyalar'
 }

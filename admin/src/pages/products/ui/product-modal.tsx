@@ -1,4 +1,13 @@
-import { Button, Form, Input, InputNumber, Modal, Select, Upload } from 'antd'
+import {
+	Button,
+	Flex,
+	Form,
+	Input,
+	InputNumber,
+	Modal,
+	Select,
+	Upload
+} from 'antd'
 import { useProductModal } from '../utils/useProductModal.ts'
 import { CreateProduct, useCreateProduct } from '../utils/products.query.ts'
 import { useGetCategories } from '../../categories/utils/category.query.tsx'
@@ -36,7 +45,7 @@ const ProductModal = () => {
 			)}
 		>
 			<Form.Item
-				label='Tavar nomi'
+				label='Tovar nomi'
 				name='name'
 				rules={[
 					{
@@ -47,7 +56,7 @@ const ProductModal = () => {
 				<Input placeholder='Printer Samsung SM-2001' />
 			</Form.Item>
 			<Form.Item
-				label="Tavar haqida qisqacha ma'lumot"
+				label="Tovar haqida qisqacha ma'lumot"
 				name='description'
 				rules={[
 					{
@@ -58,7 +67,7 @@ const ProductModal = () => {
 				<Input.TextArea placeholder='Printer Samsung SM-2001' />
 			</Form.Item>
 			<Form.Item
-				label='Tavar baxosi'
+				label='Tovar baxosi'
 				name='price'
 				rules={[
 					{
@@ -78,46 +87,50 @@ const ProductModal = () => {
 					min={0}
 				/>
 			</Form.Item>
-			<Form.Item
-				label='Tavar qaysi Katalogga kiradi'
-				name='categoryId'
-				rules={[
-					{
-						required: true
-					}
-				]}
-			>
-				<Select
-					options={categories.data?.map(category => ({
-						value: `${category.id}`,
-						label: category.name
-					}))}
-				/>
-			</Form.Item>
-			<Form.Item
-				label='Tavar turini tanlang'
-				name='productType'
-				rules={[
-					{
-						required: true
-					}
-				]}
-			>
-				<Select
-					options={[
+			<Flex gap={16}>
+				<Form.Item
+					label='Tovar qaysi Katalogga kiradi'
+					name='categoryId'
+					className='w-full'
+					rules={[
 						{
-							label: 'Dastur / Driver',
-							value: 'SOFTWARE'
-						},
-						{
-							label: 'Qurilma / Printer / Ehtiyot qism',
-							value: 'HARDWARE'
+							required: true
 						}
 					]}
-				/>
-			</Form.Item>
+				>
+					<Select
+						options={categories.data?.map(category => ({
+							value: `${category.id}`,
+							label: category.name
+						}))}
+					/>
+				</Form.Item>
+				<Form.Item
+					label='Tovar turini tanlang'
+					name='productType'
+					className='w-full'
+					rules={[
+						{
+							required: true
+						}
+					]}
+				>
+					<Select
+						options={[
+							{
+								label: 'Dastur / Driver',
+								value: 'SOFTWARE'
+							},
+							{
+								label: 'Qurilma / Printer / Ehtiyot qism',
+								value: 'HARDWARE'
+							}
+						]}
+					/>
+				</Form.Item>
+			</Flex>
 			<Form.Item
-				label='Tavar Rasmi'
+				label='Tovar Rasmi'
 				name='poster'
 				rules={[
 					{
@@ -134,6 +147,43 @@ const ProductModal = () => {
 					<Button icon={<UploadOutlined />}>Rasm Tanlang</Button>
 				</Upload>
 			</Form.Item>
+			<Flex gap={16}>
+				<Form.Item
+					label='Chegirma'
+					name='discount'
+					className='w-full'
+					rules={[
+						{
+							required: false
+						}
+					]}
+				>
+					<InputNumber
+						className='w-full'
+						inputMode='text'
+						placeholder='10'
+						addonBefore='%'
+						min={0}
+					/>
+				</Form.Item>
+				<Form.Item
+					label='Qancha tovardan keyin chegirma'
+					name='discountAfterCount'
+					className='w-full'
+					rules={[
+						{
+							required: false
+						}
+					]}
+				>
+					<InputNumber
+						className='w-full'
+						inputMode='text'
+						placeholder='10'
+						min={0}
+					/>
+				</Form.Item>
+			</Flex>
 		</Modal>
 	)
 }
