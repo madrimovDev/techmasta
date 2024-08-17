@@ -48,6 +48,14 @@ export class OrderService {
     });
   }
 
+  findUserCart(userId: number) {
+    return this.prismaService.order.findMany({
+      where: {
+        userId,
+      },
+    });
+  }
+
   remove(id: number) {
     return this.prismaService.order.delete({ where: { id } });
   }

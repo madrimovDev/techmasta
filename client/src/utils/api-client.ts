@@ -13,16 +13,18 @@ export class APIClient {
 			headers: {
 				'Content-Type': 'application/json',
 				...options.headers
+			},
+			credentials: 'include',
+			next: {
+				tags: [url]
 			}
 		})
 
+		const json = await response.json()
 		if (!response.ok) {
-			const error = new Error(`An error occurred: ${response.statusText}`)
-			error.name = 'FetchError'
-			throw error
+			throw json
 		}
-
-		return response.json()
+		return json
 	}
 
 	public get<T>(url: string, options?: FetchOptions): Promise<T> {
@@ -57,3 +59,5 @@ export class APIClient {
 		return this.request<T>(url, { ...options, method: 'DELETE' })
 	}
 }
+
+export const apiClient = new APIClient('http://localhost:3022/api/v1')

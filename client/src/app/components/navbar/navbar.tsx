@@ -14,6 +14,7 @@ import { useState } from 'react'
 import { BsCart, BsSearch } from 'react-icons/bs'
 import { menuItems } from '@/app/components/navbar/menu-items'
 import { usePathname } from 'next/navigation'
+import { CartButton } from '@/app/components/navbar/cart-button'
 
 export const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -56,9 +57,7 @@ export const Navbar = () => {
 				<NextLink href='/'>
 					<BsSearch />
 				</NextLink>
-				<NextLink href='/'>
-					<BsCart />
-				</NextLink>
+				<CartButton />
 				<NavbarMenuToggle
 					aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
 					className='sm:hidden'

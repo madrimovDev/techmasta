@@ -62,7 +62,7 @@ export class AuthService {
       if (error instanceof PrismaClientKnownRequestError) {
         throw new UnauthorizedException();
       }
-      throw new BadRequestException();
+      throw error;
     }
   }
 
@@ -125,6 +125,11 @@ export class AuthService {
       return await this.verificatedUserService.verifyUser(userId);
     }
     throw new UnauthorizedException('User not verified');
+  }
+
+  async getProfile(userId: number) {
+    const user = await this.userService.findById(userId);
+    return user;
   }
 
   private generateTokens(user: any) {

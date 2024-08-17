@@ -42,7 +42,7 @@ export const ProductImageGallery = ({ images, image }: Props) => {
 									onMouseEnter={() => setActiveImg(i)}
 									as={NextImage}
 									width={100}
-									src={i}
+									src={i.startsWith('http') ? i : 'http://localhost:3022/' + i}
 									height={100}
 									removeWrapper
 									className='w-full h-full object-cover'
@@ -59,7 +59,11 @@ export const ProductImageGallery = ({ images, image }: Props) => {
 				removeWrapper
 				shadow='md'
 				className='col-span-5 h-full aspect-square object-cover'
-				src={activeImg}
+				src={
+					activeImg.startsWith('http')
+						? activeImg
+						: 'http://localhost:3022/' + activeImg
+				}
 				alt={image}
 			/>
 		</div>

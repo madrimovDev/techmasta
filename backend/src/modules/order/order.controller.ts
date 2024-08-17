@@ -49,6 +49,15 @@ export class OrderController {
 
   @WrapperDecorator({
     isPublic: [Role.Admin, Role.User],
+    summary: ['Get User Order'],
+  })
+  @Get('/get-user-order')
+  findUserOrder(@Req() req: Request) {
+    return this.orderService.findUserCart(+req.user.id);
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.Admin, Role.User],
     summary: ['Delete Order'],
   })
   @Delete(':id')

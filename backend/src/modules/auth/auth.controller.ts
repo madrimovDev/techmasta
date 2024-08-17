@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import {
@@ -7,7 +15,7 @@ import {
   RegisterDto,
   VerifyUserDto,
 } from './dto/auth.dto';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { WrapperDecorator } from '../../common/decorators/wrapper.decorator';
 import { Role } from '../../common/guards';
@@ -35,8 +43,12 @@ export class AuthController {
     type: LoginDto,
   })
   @Post('/login')
-  login(@Req() req: Request) {
-    return req.user;
+  login(@Req() req: Request, @Res() res: Response) {
+    res
+      .cookie('refreshToken', req.user['refreshToken'], {
+        httpOnly: true,
+      })
+      .send(req.user);
   }
 
   @WrapperDecorator({
@@ -66,5 +78,15 @@ export class AuthController {
   async verifyUser(@Req() req: Request, @Body() verifyUserDTO: VerifyUserDto) {
     await this.authService.verifyUser(req.user.id, verifyUserDTO.otp);
     return 'User verified successfully';
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.Admin, Role.User],
+    summary: ['Get Profile'],
+  })
+  @Get('/profile')
+  async getProfile(@Req() req: Request) {
+    const userId = req.user.id;
+    return this.authService.getProfile(userId);
   }
 }

@@ -18,7 +18,7 @@ export class CreateOrderDto {
   @IsPositive()
   shippingServiceId: number;
   @ApiProperty({
-    type: OrderItem,
+    type: [OrderItem],
   })
   @IsArray()
   items: OrderItem[];

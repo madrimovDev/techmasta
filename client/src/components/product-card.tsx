@@ -1,3 +1,4 @@
+'use client'
 import {
 	Button,
 	Card,
@@ -11,6 +12,7 @@ import NextImage from 'next/image'
 import { BsCartCheck, BsCartPlus, BsHeart } from 'react-icons/bs'
 import NextLink from 'next/link'
 import { Product } from '@/app/products/_utils/fetch-products'
+import { addOrderItem } from '@/components/actions'
 
 interface Props {
 	product: Product
@@ -37,7 +39,11 @@ export const ProductCard = ({ product }: Props) => {
 						removeWrapper
 						className='w-full h-full object-cover z-0'
 						as={NextImage}
-						src={product.poster}
+						src={
+							product.poster.startsWith('http')
+								? product.poster
+								: 'http://localhost:3022/' + product.poster
+						}
 						width={300}
 						height={400}
 					/>
@@ -67,6 +73,7 @@ export const ProductCard = ({ product }: Props) => {
 							variant='solid'
 							color='primary'
 							size='sm'
+							onClick={() => addOrderItem(product.id)}
 							className='w-full'>
 							<BsCartPlus size='1.3em' />
 							Sotib Olish

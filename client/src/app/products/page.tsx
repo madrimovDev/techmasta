@@ -1,4 +1,3 @@
-import { fakeProducts } from '@/fake/fake-data'
 import { ProductCard } from '@/components'
 import { Filters } from '@/app/products/_components/filters'
 import { getProducts } from '@/app/products/_utils/fetch-products'
