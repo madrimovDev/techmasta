@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.section-title {
+    @apply text-5xl leading-normal mb-16
+}
+
+.section-spacing {
+    @apply my-20
+}
+
+/* Hide the arrows for WebKit browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hide the arrows for Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}

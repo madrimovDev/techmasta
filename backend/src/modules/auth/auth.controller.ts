@@ -30,8 +30,14 @@ export class AuthController {
     summary: ['Registration'],
   })
   @Post('/register')
-  register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(registerDto);
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { accessToken, refreshToken } =
+      await this.authService.register(registerDto);
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
+    return accessToken;
   }
 
   @WrapperDecorator({
@@ -43,12 +49,12 @@ export class AuthController {
     type: LoginDto,
   })
   @Post('/login')
-  login(@Req() req: Request, @Res() res: Response) {
+  login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
     res
       .cookie('refreshToken', req.user['refreshToken'], {
         httpOnly: true,
       })
-      .send(req.user);
+      .send(req.user['accessToken']);
   }
 
   @WrapperDecorator({

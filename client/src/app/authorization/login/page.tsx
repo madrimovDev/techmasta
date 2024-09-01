@@ -1,47 +1,30 @@
 'use client'
 import { Button, Input, Link } from '@nextui-org/react'
 import NextLink from 'next/link'
-import { loginAction } from '@/app/authorization/login/_utils/login-action'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
-
-interface LoginActionErrors {
-	error: string
-	message: string | { property: string; messages: string[] }[]
-}
+import { login } from '@/actions/auth/auth.action'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { authEndpoints } from '@/actions/constants'
 
 const Page = () => {
-	const [errors, setErrors] = useState<LoginActionErrors>()
-	const [isLoading, setIsLoading] = useState(false)
-	const [success, setSuccess] = useState<string | null>(null)
 	const router = useRouter()
-	useEffect(() => {
-		const accessToken = localStorage.getItem('accessToken')
-		if (accessToken) {
+	const queryClient = useQueryClient()
+	const { isPending, mutateAsync } = useMutation({
+		mutationFn: login,
+		onSuccess() {
+			void queryClient.invalidateQueries({
+				queryKey: [authEndpoints.profile]
+			})
 			router.push('/')
 		}
-	}, [])
+	})
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		setIsLoading(true)
-		setSuccess(null)
-		setErrors(undefined)
-
 		const formData = new FormData(e.currentTarget)
-
-		const result = await loginAction(formData)
-		setIsLoading(false)
-		window.localStorage.setItem('accessToken', result.accessToken)
-		router.push('/')
-		if (result.statusCode >= 400) {
-			setErrors(result)
-			console.log(result)
-		} else {
-			setSuccess('You have successfully logged in!')
-			// Optionally, redirect to the dashboard or another page
-			// router.push('/dashboard')
-		}
+		const $data = Object.fromEntries(formData.entries())
+		await mutateAsync($data as any)
 	}
 
 	return (
@@ -53,57 +36,22 @@ const Page = () => {
 					<h1 className='text-2xl font-semibold text-gray-900 mb-2'>
 						Tizimga kirish
 					</h1>
-					{success && <p className='text-green-500'>{success}</p>}
-					{errors && (
-						<p className='text-red-500'>
-							{typeof errors.message === 'string'
-								? errors.message
-								: errors.error}
-						</p>
-					)}
+
 					<Input
 						label='Username'
 						name='username'
-						isInvalid={
-							typeof errors?.message === 'object'
-								? !!errors.message.find(
-										(error) => error.property === 'username'
-									)
-								: undefined
-						}
-						errorMessage={
-							typeof errors?.message === 'object'
-								? errors.message
-										.find((error) => error.property === 'username')
-										?.messages.join(', ')
-								: undefined
-						}
 					/>
 					<Input
 						label='Parol'
 						name='password'
 						type='password'
-						isInvalid={
-							typeof errors?.message === 'object'
-								? !!errors.message.find(
-										(error) => error.property === 'password'
-									)
-								: undefined
-						}
-						errorMessage={
-							typeof errors?.message === 'object'
-								? errors.message
-										.find((error) => error.property === 'password')
-										?.messages.join(', ')
-								: undefined
-						}
 					/>
 					<Button
 						color='primary'
 						type='submit'
 						variant='shadow'
-						isLoading={isLoading}
-						isDisabled={isLoading}>
+						isLoading={isPending}
+						isDisabled={isPending}>
 						Kirish
 					</Button>
 				</form>

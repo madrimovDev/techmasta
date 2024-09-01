@@ -1,30 +1,20 @@
 'use client'
-import { useEffect, useInsertionEffect, useState } from 'react'
-import {
-	getProfileAction,
-	User
-} from '@/app/components/header/_utils/get-profile-action'
 import Link from 'next/link'
 import {
-	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger
 } from '@nextui-org/react'
+import { useQuery } from '@tanstack/react-query'
+import { profile as getProfile } from '@/actions/auth/auth.action'
+import { authEndpoints } from '@/actions/constants'
 
 export const Profile = () => {
-	const [profile, setProfile] = useState<User | undefined>()
-
-	useEffect(() => {
-		const getProfile = async () => {
-			const profile = await getProfileAction()
-			console.log(profile)
-			setProfile(profile)
-		}
-		getProfile()
-	}, [])
-
+	const { data: profile, error } = useQuery({
+		queryFn: getProfile,
+		queryKey: [authEndpoints.profile]
+	})
 	if (profile) {
 		return (
 			<Dropdown>

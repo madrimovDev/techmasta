@@ -1,9 +1,7 @@
+import { Orders } from '@/app/cart/_ui/orders'
+
 const Page = () => {
-	return (
-		<div>
-			
-		</div>
-	)
+	return <Orders />
 }
 
 export default Page

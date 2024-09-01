@@ -3,6 +3,9 @@ import { Button, Input, Link } from '@nextui-org/react'
 import NextLink from 'next/link'
 import { registerAction } from '@/app/authorization/register/_utils/register-action'
 import { FormEvent, useState } from 'react'
+import { useMutation } from '@tanstack/react-query'
+import { register, RegisterRequest } from '@/actions/auth/auth.action'
+import { useRouter } from 'next/navigation'
 
 interface RegisterActionErrors {
 	error: string
@@ -10,49 +13,29 @@ interface RegisterActionErrors {
 }
 
 const Page = () => {
-	const [errors, setErrors] = useState<RegisterActionErrors>()
-	const [isLoading, setIsLoading] = useState(false)
-	const [success, setSuccess] = useState<string | null>(null)
-
-	const validateForm = (formData: FormData) => {
-		// Client-side validation logic
-		const fullName = formData.get('fullName') as string
-		const phone = formData.get('phone') as string
-		const username = formData.get('username') as string
-		const password = formData.get('password') as string
-
-		if (!fullName || !phone || !username || !password) {
-			return 'All fields are required'
+	const router = useRouter()
+	const {
+		mutateAsync,
+		error: errors,
+		isPending: isLoading
+	} = useMutation<
+		string,
+		{
+			message: { property: string; messages: string[] }[] | string
+		},
+		RegisterRequest
+	>({
+		mutationFn: register,
+		onSuccess() {
+			router.push('/')
 		}
-
-		return null
-	}
+	})
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
-		setIsLoading(true)
-		setSuccess(null)
-		setErrors(undefined)
-
 		const formData = new FormData(e.currentTarget)
-		const validationError = validateForm(formData)
-
-		if (validationError) {
-			setErrors({ error: 'Validation Error', message: validationError })
-			setIsLoading(false)
-			return
-		}
-
-		const result = await registerAction(formData)
-		setIsLoading(false)
-
-		if (result.statusCode >= 400) {
-			setErrors(result)
-		} else {
-			setSuccess('You have successfully registered!')
-			// Optionally, redirect to the login page or another page
-			// router.push('/authorization/login')
-		}
+		const data = Object.fromEntries(formData.entries())
+		await mutateAsync(data as any)
 	}
 
 	return (
@@ -64,13 +47,10 @@ const Page = () => {
 					<h1 className='text-2xl font-semibold text-gray-900 mb-2'>
 						Ro&apos;yhatdan o&apos;tish
 					</h1>
-					{success && <p className='text-green-500'>{success}</p>}
-					{errors && (
-						<p className='text-red-500'>
-							{typeof errors.message === 'string'
-								? errors.message
-								: errors.error}
-						</p>
+					{errors && typeof errors.message === 'string' && (
+						<div className='bg-danger text-white p-2 rounded-small'>
+							{errors.message}
+						</div>
 					)}
 					<Input
 						label='Ism va familiya'

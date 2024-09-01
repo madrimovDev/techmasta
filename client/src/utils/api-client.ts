@@ -1,62 +1,73 @@
-export type FetchOptions = RequestInit
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import { getCookie } from '@/utils/getCookie'
 
 export class APIClient {
-	private baseUrl: string
+	private axiosInstance: AxiosInstance
 
 	constructor(baseUrl: string) {
-		this.baseUrl = baseUrl
-	}
-
-	private async request<T>(url: string, options: FetchOptions): Promise<T> {
-		const response = await fetch(`${this.baseUrl}${url}`, {
-			...options,
+		this.axiosInstance = axios.create({
+			baseURL: baseUrl,
 			headers: {
-				'Content-Type': 'application/json',
-				...options.headers
+				'Content-Type': 'application/json'
 			},
-			credentials: 'include',
-			next: {
-				tags: [url]
+			withCredentials: true
+		})
+
+		this.axiosInstance.interceptors.request.use(
+			async (config) => {
+				let accessToken: string | null | undefined = null
+
+				accessToken = await getCookie('accessToken')
+
+				if (accessToken) {
+					config.headers.Authorization = `Bearer ${accessToken}`
+				}
+
+				return config
+			},
+			(error) => Promise.reject(error)
+		)
+
+		this.axiosInstance.interceptors.response.use(
+			(response: AxiosResponse) => response.data,
+			(error) => {
+				const errorMessage =
+					error.response?.data?.message ||
+					error.message ||
+					'Noma’lum xatolik yuz berdi'
+				const status = error.response?.status || 500
+				// if (error.response && error.response.data.statusCode === 401) {
+				// 	if (!window.location.href.includes('/authorization'))
+				// 		return (window.location.href = '/authorization/login')
+				// }
+				const errorData = {
+					message: errorMessage,
+					status,
+					...(error.response?.data || {})
+				}
+				return Promise.reject(errorData)
 			}
-		})
-
-		const json = await response.json()
-		if (!response.ok) {
-			throw json
-		}
-		return json
+		)
 	}
 
-	public get<T>(url: string, options?: FetchOptions): Promise<T> {
-		return this.request<T>(url, { ...options, method: 'GET' })
+	public get<T>(url: string, config?: AxiosRequestConfig) {
+		return this.axiosInstance.get<T>(url, config) as Promise<T>
 	}
 
-	public post<T>(
-		url: string,
-		data: unknown,
-		options?: FetchOptions
-	): Promise<T> {
-		return this.request<T>(url, {
-			...options,
-			method: 'POST',
-			body: JSON.stringify(data)
-		})
+	public post<T>(url: string, data: unknown, config?: AxiosRequestConfig) {
+		return this.axiosInstance.post<T>(url, data, config) as Promise<T>
 	}
 
-	public put<T>(
-		url: string,
-		data: unknown,
-		options?: FetchOptions
-	): Promise<T> {
-		return this.request<T>(url, {
-			...options,
-			method: 'PUT',
-			body: JSON.stringify(data)
-		})
+	public put<T>(url: string, data: unknown, config?: AxiosRequestConfig) {
+		return this.axiosInstance.put<T>(url, data, config) as Promise<T>
 	}
 
-	public delete<T>(url: string, options?: FetchOptions): Promise<T> {
-		return this.request<T>(url, { ...options, method: 'DELETE' })
+	public patch<T>(url: string, data: unknown, config?: AxiosRequestConfig) {
+		return this.axiosInstance.patch<T>(url, data, config) as Promise<T>
+	}
+
+	public delete<T>(url: string, config?: AxiosRequestConfig) {
+		return this.axiosInstance.delete<T>(url, config) as Promise<T>
 	}
 }
 

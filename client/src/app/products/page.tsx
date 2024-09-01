@@ -1,9 +1,15 @@
+'use client'
 import { ProductCard } from '@/components'
 import { Filters } from '@/app/products/_components/filters'
-import { getProducts } from '@/app/products/_utils/fetch-products'
+import { useQuery } from '@tanstack/react-query'
+import { productEndpoints } from '@/actions/constants'
+import { getProducts } from '@/actions/products/products.action'
 
-const Page = async () => {
-	const products = await getProducts()
+const Page = () => {
+	const { data: products } = useQuery({
+		queryKey: [productEndpoints.all],
+		queryFn: getProducts
+	})
 	return (
 		<div className='py-10'>
 			<div className='grid grid-cols-12 gap-8'>
@@ -11,7 +17,7 @@ const Page = async () => {
 					<Filters />
 				</div>
 				<div className='col-span-10 grid grid-cols-4 gap-8'>
-					{products.map((product) => (
+					{products?.map((product) => (
 						<ProductCard
 							product={product}
 							key={product.id}

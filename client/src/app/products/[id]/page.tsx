@@ -1,11 +1,18 @@
+'use client'
 import { ProductImageGallery } from '@/app/products/[id]/_components/product-image-gallery'
 import { ProductInfo } from '@/app/products/[id]/_components/product-info'
-import { getProduct } from '@/app/products/[id]/_utils/fetch-product'
 import { ProductComments } from '@/app/products/[id]/_components/product-comments'
+import { useQuery } from '@tanstack/react-query'
+import { getProduct } from '@/actions/products/products.action'
 
-const Page = async ({ params }: { params: { id: string } }) => {
-	const product = await getProduct(params.id)
-	if (!product) return null
+const Page = ({ params }: { params: { id: string } }) => {
+	const { data: product, isLoading } = useQuery({
+		queryKey: ['product', params],
+		queryFn: () => getProduct(+params.id)
+	})
+
+	if (isLoading || !product) return null
+
 	return (
 		<div>
 			<div className='grid grid-cols-12 gap-8'>

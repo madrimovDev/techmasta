@@ -14,7 +14,15 @@ import {
 	BsStar,
 	BsStarFill
 } from 'react-icons/bs'
-import { Product } from '@/app/products/[id]/_utils/fetch-product'
+import { Product } from '@/actions/products/products.action'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { orderEndpoints } from '@/actions/constants'
+import {
+	addItemToOrder,
+	getUserOrders,
+	itemQuantity
+} from '@/actions/orders/orders.action'
+import { getQueryClient } from '@/app/get-query-client'
 
 interface Props {
 	product: Product
@@ -26,6 +34,35 @@ const calculateRating = (ratings: Product['productRating']) => {
 }
 
 export const ProductInfo = ({ product }: Props) => {
+	const queryClient = getQueryClient()
+	const { data: order } = useQuery({
+		queryKey: [orderEndpoints.userOrder],
+		queryFn: getUserOrders
+	})
+
+	const quantity = useMutation({
+		mutationFn: itemQuantity,
+		onSuccess() {
+			void queryClient.invalidateQueries({
+				queryKey: [orderEndpoints.userOrder]
+			})
+		}
+	})
+
+	const addItem = useMutation({
+		mutationFn: addItemToOrder,
+		onSuccess() {
+			void queryClient.invalidateQueries({
+				queryKey: [orderEndpoints.userOrder]
+			})
+		}
+	})
+
+	const orderItem = order?.orderItem?.find(
+		(item) => item.productId === product.id
+	)
+	const isExists = Boolean(orderItem)
+
 	return (
 		<div>
 			<h1 className='text-5xl font-bold'>{product.name}</h1>
@@ -37,11 +74,29 @@ export const ProductInfo = ({ product }: Props) => {
 					isIconOnly
 					variant='solid'
 					className='border rounded-medium'>
-					<Button className='bg-white'>
+					<Button
+						onClick={() => {
+							if (orderItem && orderItem.quantity > 1) {
+								quantity.mutate({
+									itemId: orderItem.id,
+									quantity: orderItem.quantity - 1
+								})
+							}
+						}}
+						className='bg-white'>
 						<BsDash />
 					</Button>
-					<Button className='bg-white'>1</Button>
-					<Button className='bg-white'>
+					<Button className='bg-white'>{orderItem?.quantity ?? 1}</Button>
+					<Button
+						className='bg-white'
+						onClick={() => {
+							if (orderItem) {
+								quantity.mutate({
+									itemId: orderItem.id,
+									quantity: orderItem.quantity + 1
+								})
+							}
+						}}>
 						<BsPlus />
 					</Button>
 				</ButtonGroup>
@@ -52,7 +107,9 @@ export const ProductInfo = ({ product }: Props) => {
 					{new Intl.NumberFormat('uz-UZ', {
 						style: 'currency',
 						currency: 'UZS'
-					}).format(product.price)}
+					}).format(
+						orderItem ? orderItem.quantity * product.price : product.price
+					)}
 				</p>
 			</div>
 			<div className='flex gap-2 items-center text-4xl my-8'>
@@ -71,11 +128,17 @@ export const ProductInfo = ({ product }: Props) => {
 			<div className='flex gap-4'>
 				<Button
 					size='lg'
-					color='primary'
-					className='w-full'
+					color={isExists ? 'success' : 'primary'}
+					className='w-full text-white'
 					variant='shadow'
+					isDisabled={isExists}
+					onClick={() => {
+						if (order) {
+							addItem.mutate({ productId: product.id, orderId: order.id })
+						}
+					}}
 					startContent={<BsCartPlus size='1.4em' />}>
-					Savatchaga qo&apos;shish
+					{isExists ? "Savatchaga qo'shilgan" : "Savatchaga qo'shish"}
 				</Button>
 				<Button
 					size='lg'

@@ -1,10 +1,10 @@
 'use client'
-import { Product } from '@/app/products/[id]/_utils/fetch-product'
 import { Button, Textarea } from '@nextui-org/react'
 import { BsSend } from 'react-icons/bs'
+import { ProductComment } from '@/actions/products/products.action'
 
 interface Props {
-	comments: Product['productComment']
+	comments: ProductComment[]
 }
 
 export const ProductComments = ({ comments }: Props) => {

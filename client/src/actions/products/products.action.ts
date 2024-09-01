@@ -1,6 +1,8 @@
-import { APIClient } from '@/utils'
+'use server'
 
-const apiClient = new APIClient('http://localhost:3022/api/v1/products')
+import { apiClient } from '@/utils'
+import { User } from '@/actions/auth/auth.action'
+import { productEndpoints } from '@/actions/constants'
 
 export interface Product {
 	id: number
@@ -17,8 +19,25 @@ export interface Product {
 	createdAt: string
 	category: Category
 	post: any
+	images: ProductImage[]
 	productRating: ProductRating[]
 	productComment: ProductComment[]
+	information: ProductInformation[]
+}
+
+export interface ProductInformation {
+	id: number
+	name: string
+	value: string
+	productId: number
+	createdAt: string
+}
+
+export interface ProductImage {
+	id: number
+	url: string
+	productId: number
+	createdAt: string
 }
 
 export interface Category {
@@ -42,9 +61,15 @@ export interface ProductComment {
 	comment: string
 	createdAt: string
 	updatedAt: string
+	user: User
 }
 
 export const getProducts = async () => {
-	const response = await apiClient.get<Product[]>('/')
+	const response = await apiClient.get<Product[]>(productEndpoints.all)
+	return response
+}
+
+export const getProduct = async (id: number) => {
+	const response = await apiClient.get<Product>(productEndpoints.one(id))
 	return response
 }

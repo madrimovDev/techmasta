@@ -81,7 +81,7 @@ export class ProductService {
         images: true,
       },
       orderBy: {
-        createdAt: 'desc',
+        id: 'desc',
       },
     });
   }

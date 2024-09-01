@@ -1,5 +1,11 @@
 'use client'
 import {
+	Avatar,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownSection,
+	DropdownTrigger,
 	Link,
 	Navbar as Nav,
 	NavbarBrand,
@@ -7,18 +13,26 @@ import {
 	NavbarItem,
 	NavbarMenu,
 	NavbarMenuItem,
-	NavbarMenuToggle
+	NavbarMenuToggle,
+	User
 } from '@nextui-org/react'
 import NextLink from 'next/link'
-import { useState } from 'react'
-import { BsCart, BsSearch } from 'react-icons/bs'
+import { useMemo, useState } from 'react'
+import { BsSearch } from 'react-icons/bs'
 import { menuItems } from '@/app/components/navbar/menu-items'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { CartButton } from '@/app/components/navbar/cart-button'
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query'
+import { authEndpoints } from '@/actions/constants'
+import { logout, profile } from '@/actions/auth/auth.action'
+import { getQueryClient } from '@/app/get-query-client'
+import { ProfileDropdown } from '@/app/components/navbar/profile-dropdown'
 
 export const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 	const pathname = usePathname()
+
+
 	return (
 		<Nav
 			onMenuOpenChange={setIsMenuOpen}
@@ -32,7 +46,6 @@ export const Navbar = () => {
 					<p className='font-bold text-inherit'>TechMasta</p>
 				</NavbarBrand>
 			</NavbarContent>
-
 			<NavbarContent
 				className='hidden sm:flex gap-4'
 				justify='center'>
@@ -58,6 +71,7 @@ export const Navbar = () => {
 					<BsSearch />
 				</NextLink>
 				<CartButton />
+				<ProfileDropdown />
 				<NavbarMenuToggle
 					aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
 					className='sm:hidden'

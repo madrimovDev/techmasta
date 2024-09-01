@@ -7,11 +7,11 @@ import 'swiper/css'
 import 'swiper/css/autoplay'
 import { Autoplay } from 'swiper/modules'
 import { ScrollShadow } from '@nextui-org/react'
-import { Product } from '@/app/products/[id]/_utils/fetch-product'
+import { ProductImage } from '@/actions/products/products.action'
 
 interface Props {
 	image: string
-	images: Product['images']
+	images: ProductImage[]
 }
 
 export const ProductImageGallery = ({ images, image }: Props) => {

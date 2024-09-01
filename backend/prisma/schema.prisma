@@ -49,6 +49,7 @@ model Post {
   poster      String
   content     String
   products    Product[]
+  tags        String[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
   postRating  PostRating[]
@@ -56,12 +57,13 @@ model Post {
 }
 
 model PostRating {
-  id     Int  @id @default(autoincrement())
-  postId Int
-  post   Post @relation(fields: [postId], references: [id])
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
-  star   Int
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  star      Int
+  createdAt DateTime @default(now())
 }
 
 model PostComment {
@@ -80,38 +82,54 @@ model Category {
   id          Int       @id @default(autoincrement())
   name        String    @unique
   description String
-  Product     Product[]
+  product     Product[]
 }
 
 model Product {
-  id                 Int                  @id @default(autoincrement())
-  name               String
-  description        String
-  price              Float
-  discount           Int?
-  discountAfterCount Int?
-  url                String? // software url
-  information        ProductInformation[]
-  poster             String
-  images             ProductImage[]
-  productType        ProductType
-  category           Category             @relation(fields: [categoryId], references: [id])
-  post               Post?                @relation(fields: [postId], references: [id])
-  postId             Int?
-  categoryId         Int
-  createdAt          DateTime             @default(now())
-  productRating      ProductRating[]
-  productComment     ProductComment[]
-  orderItem          OrderItem[]
+  id             Int                  @id @default(autoincrement())
+  name           String
+  description    String
+  price          Float
+  url            String? // software url
+  information    ProductInformation[]
+  poster         String
+  images         ProductImage[]
+  productType    ProductType
+  category       Category             @relation(fields: [categoryId], references: [id])
+  post           Post[]
+  categoryId     Int
+  createdAt      DateTime             @default(now())
+  productRating  ProductRating[]
+  productComment ProductComment[]
+  orderItem      OrderItem[]
+  discountRuleId Int
+  discountRule   DiscountRule         @relation(fields: [discountRuleId], references: [id])
+}
+
+model DiscountRule {
+  id              Int          @id @default(autoincrement())
+  name            String
+  discountType    DiscountType
+  discountValue   Float
+  minimumQuantity Int
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  product         Product[]
+}
+
+enum DiscountType {
+  PERCENTAGE
+  AMOUNT
 }
 
 model ProductRating {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   productId Int
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
   userId    Int
-  user      User    @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
   star      Int
+  createdAt DateTime @default(now())
 }
 
 model ProductComment {
