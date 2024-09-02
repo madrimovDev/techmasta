@@ -7,25 +7,8 @@ export const seed = async (app: INestApplication) => {
   const prismaService = app.get(PrismaService);
   prismaService.enableShutdownHooks(app);
 
-  let adminRole = await prismaService.role.findUnique({
-    where: { name: 'admin' },
-  });
-  let userRole = await prismaService.role.findUnique({
-    where: { name: 'user' },
-  });
-
-  if (!adminRole) {
-    adminRole = await prismaService.role.create({
-      data: { name: 'admin' },
-    });
-  }
-  if (!userRole) {
-    userRole = await prismaService.role.create({
-      data: { name: 'user' },
-    });
-  }
   const usersCount = await prismaService.user.count({
-    where: { role: { name: 'user' } },
+    where: { role: 'user' },
   });
   if (usersCount >= 10) return;
   const users = await prismaService.user.createManyAndReturn({
@@ -33,12 +16,12 @@ export const seed = async (app: INestApplication) => {
       fullName: faker.person.fullName(),
       username: faker.person.lastName(),
       password: faker.internet.password(),
-      roleId: userRole.id,
+      role: 'user',
     })),
   });
 
   const adminUserCount = await prismaService.user.count({
-    where: { role: { name: 'admin' } },
+    where: { role: 'admin' },
   });
 
   if (adminUserCount === 0) {
@@ -49,7 +32,7 @@ export const seed = async (app: INestApplication) => {
         fullName: 'admin',
         username: 'admin',
         password: passwordHash,
-        roleId: adminRole.id,
+        role: 'admin',
       },
     });
 
