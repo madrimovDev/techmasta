@@ -12,15 +12,16 @@ import { useProductModal } from '../utils/useProductModal.ts'
 import { CreateProduct, useCreateProduct } from '../utils/products.query.ts'
 import { useGetCategories } from '../../categories/utils/category.query.tsx'
 import { UploadOutlined } from '@ant-design/icons'
+import { useGetDiscountRules } from '../../discount-rule/utils/discount-rule.query.ts'
 
 const ProductModal = () => {
 	const { data, open, onClose } = useProductModal()
 	const categories = useGetCategories()
 	const [form] = Form.useForm<CreateProduct>()
 	const create = useCreateProduct()
+	const discounts = useGetDiscountRules()
 	// eslint-disable-next-line
 	const onFinish = (data: any) => {
-		console.log(data)
 		create.mutate({
 			...data,
 			poster: data.poster.file
@@ -106,26 +107,15 @@ const ProductModal = () => {
 					/>
 				</Form.Item>
 				<Form.Item
-					label='Tovar turini tanlang'
-					name='productType'
+					label='Chegirma'
+					name='discountRuleId'
 					className='w-full'
-					rules={[
-						{
-							required: true
-						}
-					]}
 				>
 					<Select
-						options={[
-							{
-								label: 'Dastur / Driver',
-								value: 'SOFTWARE'
-							},
-							{
-								label: 'Qurilma / Printer / Ehtiyot qism',
-								value: 'HARDWARE'
-							}
-						]}
+						options={discounts.data?.map(disc => ({
+							label: `${disc.name} | ${disc.discountValue}`,
+							value: `${disc.id}`
+						}))}
 					/>
 				</Form.Item>
 			</Flex>
@@ -147,43 +137,6 @@ const ProductModal = () => {
 					<Button icon={<UploadOutlined />}>Rasm Tanlang</Button>
 				</Upload>
 			</Form.Item>
-			<Flex gap={16}>
-				<Form.Item
-					label='Chegirma'
-					name='discount'
-					className='w-full'
-					rules={[
-						{
-							required: false
-						}
-					]}
-				>
-					<InputNumber
-						className='w-full'
-						inputMode='text'
-						placeholder='10'
-						addonBefore='%'
-						min={0}
-					/>
-				</Form.Item>
-				<Form.Item
-					label='Qancha tovardan keyin chegirma'
-					name='discountAfterCount'
-					className='w-full'
-					rules={[
-						{
-							required: false
-						}
-					]}
-				>
-					<InputNumber
-						className='w-full'
-						inputMode='text'
-						placeholder='10'
-						min={0}
-					/>
-				</Form.Item>
-			</Flex>
 		</Modal>
 	)
 }

@@ -5,13 +5,15 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  Query,
   Req,
   UploadedFiles,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { WrapperDecorator } from '../../common/decorators/wrapper.decorator';
 import { AnyFilesInterceptor } from '@nestjs/platform-express';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -111,6 +113,20 @@ export class PostController {
 
   @WrapperDecorator({
     isPublic: true,
+    summary: ['Get All Popular Posts'],
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    required: false,
+  })
+  @Get('/popular')
+  async getAllPopularPosts(@Query('limit') limit?: string) {
+    return this.postService.findPopularPosts(limit);
+  }
+
+  @WrapperDecorator({
+    isPublic: true,
     summary: ['Get post by id'],
   })
   @Get(':id')
@@ -157,6 +173,15 @@ export class PostController {
       userId,
       ...commentDto,
     });
+  }
+
+  @WrapperDecorator({
+    isPublic: [Role.User],
+    summary: ['Get Comments'],
+  })
+  @Get(':id/comment')
+  getComments(@Param('id', ParseIntPipe) id: number) {
+    return this.postService.getComments(id);
   }
 
   @WrapperDecorator({

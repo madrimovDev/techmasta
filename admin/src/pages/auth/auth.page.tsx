@@ -7,7 +7,7 @@ const AuthPage = () => {
 		mutate(data)
 	}
 	return (
-		<div className='h-screen grid place-items-center bg-gray-50'>
+		<div className='h-screen grid place-items-center dark:bg-black/50 backdrop-blur bg-gray-50/50'>
 			<Card
 				className='w-full max-w-md shadow-xl'
 				title='Tizimga kirish'

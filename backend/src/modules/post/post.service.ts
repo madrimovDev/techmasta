@@ -84,11 +84,44 @@ export class PostService {
       select: {
         id: true,
         title: true,
-        description: true,
         poster: true,
+        tags: true,
         createdAt: true,
+        postRating: {
+          select: {
+            star: true,
+            userId: true,
+          },
+        },
+        postComment: {
+          select: { userId: true },
+        },
       },
     });
+
+    return posts;
+  }
+
+  async findPopularPosts(limit?: string) {
+    const rawLimit = isNaN(+limit) ? 6 : BigInt(+limit);
+    const posts = await this.prismaService.$queryRaw`
+    SELECT 
+        p.id,
+        p.title,
+        p.description,
+        p.poster,
+        p.tags,
+        p."createdAt",
+        COALESCE(json_agg(json_build_object('star', pr.star, 'userId', pr."userId")) FILTER (WHERE pr.star IS NOT NULL), '[]') AS "postRating"
+    FROM 
+        "Post" p
+    LEFT JOIN 
+        "PostRating" pr ON p.id = pr."postId" AND pr.star >= 4
+    GROUP BY 
+        p.id, p.title, p.description, p.poster, p.tags, p."createdAt"
+    LIMIT ${rawLimit};
+    `;
+
     return posts;
   }
 
@@ -97,6 +130,12 @@ export class PostService {
       where: { id },
       include: {
         products: true,
+        postRating: {
+          select: {
+            star: true,
+            userId: true,
+          },
+        },
       },
     });
     if (!post) {
@@ -116,6 +155,7 @@ export class PostService {
       await rm(videoPath);
       return post;
     } catch (e) {
+      console.log(e)
       throw new NotFoundException('Post not found');
     }
   }
@@ -130,6 +170,22 @@ export class PostService {
       },
     });
     return postStar;
+  }
+
+  async getComments(postId: number) {
+    const postComments = await this.prismaService.postComment.findMany({
+      where: {
+        postId,
+      },
+      include: {
+        user: {
+          select: {
+            fullName: true,
+          },
+        },
+      },
+    });
+    return postComments;
   }
 
   async addComment({

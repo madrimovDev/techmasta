@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { endpoints, http } from '../../../app/http'
+import { Soato } from '../../../app/query'
 
 export interface ShippingService {
 	id: number
@@ -7,6 +8,7 @@ export interface ShippingService {
 	description: string
 	price: number
 	unit: string
+	soato: Soato[]
 }
 
 export const useGetShippingServices = () => {
@@ -24,7 +26,9 @@ export const useGetShippingServices = () => {
 export const useCreateShippingService = () => {
 	const queryClient = useQueryClient()
 	return useMutation({
-		mutationFn: async (data: Omit<ShippingService, 'id'>) => {
+		mutationFn: async (
+			data: Omit<ShippingService, 'id'> & { soatoCode: string[] }
+		) => {
 			return http.post(endpoints.shippingServices.all, data)
 		},
 		onSuccess: () => {

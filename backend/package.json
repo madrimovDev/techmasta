@@ -56,7 +56,8 @@
     "prisma": "^5.17.0",
     "redis": "^4.6.15",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "swagger-themes": "^1.4.3"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",

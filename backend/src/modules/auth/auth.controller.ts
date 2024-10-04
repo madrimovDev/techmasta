@@ -9,12 +9,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import {
-  LoginDto,
-  RefreshTokenDto,
-  RegisterDto,
-  VerifyUserDto,
-} from './dto/auth.dto';
+import { LoginDto, RegisterDto, VerifyUserDto } from './dto/auth.dto';
 import { Request, Response } from 'express';
 import { AuthGuard } from '@nestjs/passport';
 import { WrapperDecorator } from '../../common/decorators/wrapper.decorator';
@@ -37,7 +32,7 @@ export class AuthController {
     const { accessToken, refreshToken } =
       await this.authService.register(registerDto);
     res.cookie('refreshToken', refreshToken, { httpOnly: true });
-    return accessToken;
+    return { accessToken };
   }
 
   @WrapperDecorator({
@@ -54,23 +49,22 @@ export class AuthController {
       .cookie('refreshToken', req.user['refreshToken'], {
         httpOnly: true,
       })
-      .send(req.user['accessToken']);
+      .send({ accessToken: req.user['accessToken'] });
   }
 
   @WrapperDecorator({
     isPublic: true,
     summary: ['Refresh access token'],
   })
-  @Post('/refresh')
-  async refreshAccessToken(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refreshAccessToken(refreshTokenDto.refreshToken);
+  @Get('/refresh')
+  async refreshAccessToken(@Req() req: Request) {
+    return this.authService.refreshAccessToken(req.cookies['refreshToken']);
   }
 
   @WrapperDecorator({
     isPublic: [Role.Admin, Role.User],
     summary: ['Verify access token'],
   })
-  @UseGuards(AuthGuard('local'))
   @Get('/verify-access')
   verify(@Req() req: Request) {
     return req.user;
@@ -82,8 +76,13 @@ export class AuthController {
   })
   @Post('/verify-user')
   async verifyUser(@Req() req: Request, @Body() verifyUserDTO: VerifyUserDto) {
-    await this.authService.verifyUser(req.user.id, verifyUserDTO.otp);
-    return 'User verified successfully';
+    const verified = await this.authService.verifyUser(
+      req.user.id,
+      verifyUserDTO.otp,
+    );
+    return {
+      verified,
+    };
   }
 
   @WrapperDecorator({

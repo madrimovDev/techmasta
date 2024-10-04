@@ -80,6 +80,22 @@ export interface AddItemToOrder {
 	productId: number
 }
 
+export const createOrder = async (productId: number) => {
+	try {
+		const response = await apiClient.post(orderEndpoints.all, {
+			shippingServiceId: 1,
+			items: [
+				{
+					productId,
+					quantity: 1
+				}
+			]
+		})
+	} catch (e) {
+		return e
+	}
+}
+
 export const addItemToOrder = async ({
 	orderId,
 	productId

@@ -11,9 +11,8 @@ export class ProductImageService {
   ) {}
 
   async create(productId: number, image: string) {
-    const product = await this.productService.findOneById(productId);
-    if (!product)
-      throw new NotFoundException(`Product with id ${productId} not found`);
+    await this.productService.findOneById(productId);
+
     return this.prismaService.productImage.create({
       data: {
         productId,
@@ -23,9 +22,7 @@ export class ProductImageService {
   }
 
   async getAll(productId: number) {
-    const product = await this.productService.findOneById(productId);
-    if (!product)
-      throw new NotFoundException(`Product with id ${productId} not found`);
+    await this.productService.findOneById(productId);
     return this.prismaService.productImage.findMany({
       where: {
         productId,

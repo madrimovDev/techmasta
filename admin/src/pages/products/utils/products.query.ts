@@ -6,8 +6,8 @@ export interface CreateProduct {
 	name: string
 	description: string
 	price: number
+	disCountRuleId: number
 	categoryId: number
-	productType: 'SOFTWARE' | 'HARDWARE'
 	poster: File
 }
 
@@ -35,6 +35,14 @@ export interface ProductComment {
 	}
 }
 
+export interface DiscountRule {
+	id: number
+	name: string
+	description: string
+	minimumQuantity: number
+	discountValue: number
+}
+
 export interface Product {
 	id: number
 	name: string
@@ -45,11 +53,9 @@ export interface Product {
 	postId: number | null
 	url: string | null
 	poster: string
-	productType: 'SOFTWARE' | 'HARDWARE'
 	productRating: { star: number }[]
 	productComment: ProductComment[]
-	discount?: number
-	discountAfterCount?: number
+	discountRule: DiscountRule
 }
 
 export interface ProductWithDetail extends Product {

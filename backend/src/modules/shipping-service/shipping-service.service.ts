@@ -7,14 +7,23 @@ import { PrismaService } from '../../common';
 export class ShippingServiceService {
   constructor(private prismaService: PrismaService) {}
 
-  create(createShippingServiceDto: CreateShippingServiceDto) {
+  create({ soatoCode, ...createShippingServiceDto }: CreateShippingServiceDto) {
     return this.prismaService.shippingService.create({
-      data: createShippingServiceDto,
+      data: {
+        ...createShippingServiceDto,
+        soato: {
+          connect: soatoCode.map((c) => ({ code: c })),
+        },
+      },
     });
   }
 
   findAll() {
-    return this.prismaService.shippingService.findMany();
+    return this.prismaService.shippingService.findMany({
+      include: {
+        soato: true,
+      },
+    });
   }
 
   findOne(id: number) {

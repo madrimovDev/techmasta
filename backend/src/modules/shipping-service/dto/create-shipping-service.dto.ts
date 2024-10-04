@@ -1,4 +1,10 @@
-import { IsNumber, IsPositive, IsString, Length } from 'class-validator';
+import {
+  IsArray,
+  IsNumber,
+  IsPositive,
+  IsString,
+  Length,
+} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateShippingServiceDto {
@@ -18,4 +24,13 @@ export class CreateShippingServiceDto {
   @IsString()
   @Length(2, 30)
   unit: string;
+  @ApiProperty({
+    type: 'string',
+    isArray: true,
+  })
+  @IsArray()
+  @IsString({
+    each: true,
+  })
+  soatoCode: string[];
 }

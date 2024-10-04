@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -14,17 +13,16 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { ApiBody, ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { CreateProductDto } from './dto/create-product.dto';
 import { WrapperDecorator } from '../../common/decorators/wrapper.decorator';
 import { Role } from '../../common/guards';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { rm } from 'fs/promises';
-import { AddSoftwareDto } from './dto/add-software.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { AddCommentDto } from './dto/add-comment.dto';
 import { Request } from 'express';
 import { GetProductQueryDto } from './dto/get-product-query.dto';
+import { AddRatingDto } from './dto/add-rating.dto'
 
 @ApiTags('Product')
 @Controller('products')
@@ -43,28 +41,6 @@ export class ProductController {
     @UploadedFile() poster: Express.Multer.File,
   ) {
     return this.productService.create(createProductDto, poster.path);
-  }
-
-  @WrapperDecorator({
-    isPublic: [Role.Admin],
-    summary: ['Add Soft to product'],
-  })
-  @Post(':id/software')
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    type: AddSoftwareDto,
-  })
-  @UseInterceptors(FileInterceptor('software'))
-  async addSoft(
-    @Param('id') id: string,
-    @UploadedFile() software: Express.Multer.File,
-  ) {
-    try {
-      return this.productService.addSoftwareToProduct(+id, software.path);
-    } catch {
-      await rm(software.path);
-      throw new BadRequestException('Product not found');
-    }
   }
 
   @WrapperDecorator({
@@ -139,9 +115,11 @@ export class ProductController {
   @Post(':id/rating')
   async addRating(
     @Param('id') id: string,
-    @Body() { userId, star }: { userId: number; star: number },
+    @Req() req: Request,
+    @Body() { star }: AddRatingDto,
   ) {
-    return this.productService.addRating(+id, userId, star);
+    const user = req.user;
+    return this.productService.addRating(+id, user.id, star);
   }
 
   @WrapperDecorator({

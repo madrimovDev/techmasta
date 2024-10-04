@@ -1,10 +1,13 @@
-import { Form, Input, InputNumber } from 'antd'
+import { Form, Input, InputNumber, TreeSelect } from 'antd'
+import { useGetRegions } from '../../../app/query'
 
 const { Item } = Form
 
 const rules = [{ required: true }]
 
 export const ShippingServiceForm = () => {
+	const regions = useGetRegions()
+
 	return (
 		<>
 			<Item
@@ -43,6 +46,22 @@ export const ShippingServiceForm = () => {
 					inputMode='text'
 					placeholder='10000'
 					min={0}
+				/>
+			</Item>
+			<Item
+				label='Viloyat'
+				name='soatoCode'
+			>
+				<TreeSelect
+					multiple
+					treeLine
+					treeCheckable
+					showSearch
+					treeCheckStrictly
+					treeData={regions.data?.map(region => ({
+						title: region.name,
+						value: region.code
+					}))}
 				/>
 			</Item>
 		</>

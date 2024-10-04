@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -25,22 +21,10 @@ export class ProductService {
       data: {
         ...createProductDto,
         price: +createProductDto.price,
+        productType: 'HARDWARE',
         categoryId: +createProductDto.categoryId,
         poster,
       },
-    });
-  }
-
-  async addSoftwareToProduct(id: number, software: string) {
-    const product = await this.findProductById(id);
-
-    if (product.productType === 'HARDWARE') {
-      throw new BadRequestException('Product type not allowed');
-    }
-
-    return this.prismaService.product.update({
-      where: { id },
-      data: { url: software },
     });
   }
 
@@ -61,8 +45,6 @@ export class ProductService {
   }
 
   async getAll(category?: string) {
-    const where = category ? { category: { name: category } } : {};
-
     return this.prismaService.product.findMany({
       where: {
         category: {
@@ -79,6 +61,7 @@ export class ProductService {
         productComment: true,
         information: true,
         images: true,
+        discountRule: true,
       },
       orderBy: {
         id: 'desc',
@@ -98,6 +81,7 @@ export class ProductService {
           },
         },
         productRating: true,
+        discountRule: true,
       },
     });
     if (!product) throw new NotFoundException(`Product ${id} not found`);
@@ -115,8 +99,16 @@ export class ProductService {
   async addRating(productId: number, userId: number, star: number) {
     await this.findProductById(productId);
 
-    return this.prismaService.productRating.create({
-      data: {
+    return this.prismaService.productRating.upsert({
+      where: {
+        productId_userId: { userId, productId },
+      },
+      create: {
+        productId,
+        userId,
+        star,
+      },
+      update: {
         productId,
         userId,
         star,

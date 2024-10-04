@@ -7,7 +7,7 @@ export const fileFilter = (
 ) => {
   const allowedMimeTypes = {
     video: 'video/mp4',
-    poster: 'image/jpeg',
+    poster: 'image/*',
   };
 
   const isFileTypeValid = allowedMimeTypes[file.fieldname] === file.mimetype;

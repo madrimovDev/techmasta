@@ -17,7 +17,7 @@ model Soato {
   parent          Soato?            @relation("ParentChild", fields: [parentCode], references: [code])
   children        Soato[]           @relation("ParentChild")
   user            User[]
-  ShippingService ShippingService[]
+  shippingService ShippingService[]
 }
 
 enum SoatoType {
@@ -31,7 +31,7 @@ model User {
   username        String            @unique
   password        String
   phone           String?           @unique
-  soatoId         String?           @unique
+  soatoId         String?
   soato           Soato?            @relation(fields: [soatoId], references: [code])
   role            Role              @default(user)
   createdAt       DateTime          @default(now())
@@ -75,7 +75,7 @@ model Post {
 model PostRating {
   id        Int      @id @default(autoincrement())
   postId    Int
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   userId    Int
   user      User     @relation(fields: [userId], references: [id])
   star      Int
@@ -85,7 +85,7 @@ model PostRating {
 model PostComment {
   id        Int      @id @default(autoincrement())
   postId    Int
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   repliedId Int?
   comment   String
   userId    Int
@@ -117,8 +117,8 @@ model Product {
   productRating  ProductRating[]
   productComment ProductComment[]
   orderItem      OrderItem[]
-  discountRuleId Int
-  discountRule   DiscountRule         @relation(fields: [discountRuleId], references: [id])
+  discountRuleId Int?
+  discountRule   DiscountRule?        @relation(fields: [discountRuleId], references: [id])
 }
 
 model DiscountRule {
@@ -140,6 +140,8 @@ model ProductRating {
   user      User     @relation(fields: [userId], references: [id])
   star      Int
   createdAt DateTime @default(now())
+
+  @@unique([productId, userId])
 }
 
 model ProductComment {
@@ -197,8 +199,8 @@ model OrderItem {
   orderId               Int
   quantity              Int
   priceAtTime           Float
-  discountAtTime        Int
-  minimumQuantityAtTime Int
+  discountAtTime        Int?
+  minimumQuantityAtTime Int?
 }
 
 enum DeliveryStatus {
@@ -223,5 +225,5 @@ model ShippingService {
   soato       Soato[]
   price       Float
   unit        String
-  Order       Order[]
+  order       Order[]
 }

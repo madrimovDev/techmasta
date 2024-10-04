@@ -12,21 +12,27 @@ export const ShippingServiceModal = () => {
 	const { open, onClose, data } = useShippingServiceModal()
 	const createShippingService = useCreateShippingService()
 	const updateShippingService = useUpdateShippingService()
-	const [form] = Form.useForm()
+	const [form] = Form.useForm<any>()
 
-	const onFinish = async (values: Omit<ShippingService, 'id'>) => {
+	const onFinish = async (
+		values: Omit<ShippingService, 'id'> & {
+			soatoCode: { label: string; value: string }[]
+		}
+	) => {
 		try {
 			if (data) {
 				await updateShippingService.mutateAsync({ ...values, id: data.id })
 			} else {
-				await createShippingService.mutateAsync(values)
+				await createShippingService.mutateAsync({
+					...values,
+					soatoCode: values.soatoCode.map(s => s.value)
+				})
 			}
 			onClose()
 		} catch (error) {
 			console.error(error)
 		}
 	}
-
 	useEffect(() => {
 		if (open && data) {
 			form.setFields(
@@ -40,7 +46,7 @@ export const ShippingServiceModal = () => {
 		} else {
 			form.resetFields(undefined)
 		}
-	}, [open, form])
+	}, [open, form, data])
 
 	return (
 		<Modal

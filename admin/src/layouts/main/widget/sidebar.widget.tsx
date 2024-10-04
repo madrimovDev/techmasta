@@ -36,6 +36,11 @@ const menuItems: ItemType[] = [
 		key: '/shipping-services',
 		label: <Link to='/shipping-services'>Pochtalar</Link>,
 		icon: <DeliveredProcedureOutlined />
+	},
+	{
+		key: '/discount-rule',
+		label: <Link to='/discount-rule'>Chegirmalar</Link>,
+		icon: <span className='text-[1.1em]'>%</span>
 	}
 ]
 

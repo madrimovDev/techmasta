@@ -1,11 +1,12 @@
 'use client'
-import { Button, Input, Link } from '@nextui-org/react'
+import { Button, Input, Link, Select, SelectItem } from '@nextui-org/react'
 import NextLink from 'next/link'
-import { registerAction } from '@/app/authorization/register/_utils/register-action'
-import { FormEvent, useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { FormEvent, useMemo, useState } from 'react'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { register, RegisterRequest } from '@/actions/auth/auth.action'
 import { useRouter } from 'next/navigation'
+import { soatoEndpoints } from '@/actions/constants'
+import { getSoato } from '@/actions/soato/soato-actions'
 
 interface RegisterActionErrors {
 	error: string
@@ -14,6 +15,14 @@ interface RegisterActionErrors {
 
 const Page = () => {
 	const router = useRouter()
+	const [regionCode, setRegionCode] = useState<string>('')
+	const soato = useQuery({
+		queryKey: [soatoEndpoints.region],
+		queryFn: getSoato
+	})
+	const district = useMemo(() => {
+		return soato.data?.find((s) => s.code === regionCode)?.children ?? []
+	}, [regionCode, soato])
 	const {
 		mutateAsync,
 		error: errors,
@@ -30,14 +39,12 @@ const Page = () => {
 			router.push('/')
 		}
 	})
-
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		const formData = new FormData(e.currentTarget)
 		const data = Object.fromEntries(formData.entries())
 		await mutateAsync(data as any)
 	}
-
 	return (
 		<div className='flex items-center justify-center'>
 			<div className='max-w-sm w-full'>
@@ -53,6 +60,7 @@ const Page = () => {
 						</div>
 					)}
 					<Input
+						isRequired
 						label='Ism va familiya'
 						name='fullName'
 						isInvalid={
@@ -104,6 +112,24 @@ const Page = () => {
 								: undefined
 						}
 					/>
+					<Select
+						label='Viloyat'
+						onSelectionChange={(selection) => {
+							const set = new Set(selection)
+							const code = Array.from(set)?.at(0)
+							setRegionCode(code as string)
+						}}>
+						{soato.data?.map((s) => {
+							return <SelectItem key={s.code}>{s.name}</SelectItem>
+						}) ?? []}
+					</Select>
+					<Select
+						label='Tuman / Shahar'
+						name='soatoCode'>
+						{district.map((s) => {
+							return <SelectItem key={s.code}>{s.name}</SelectItem>
+						})}
+					</Select>
 					<Input
 						label='Parol'
 						name='password'

@@ -1,6 +1,11 @@
 const BASE_URL = import.meta.env.VITE_APP_BASE_URL || '/'
 const PREFIX = import.meta.env.VITE_APP_API_PREFIX || ''
 
+const soato = (prefix: string) => ({
+	regions: `${prefix}/soato`,
+	districts: (regionCode: string) => `${prefix}/soato?regionCode=${regionCode}`
+})
+
 const auth = (prefix: string) => ({
 	login: `${prefix}/auth/login`,
 	register: `${prefix}/auth/register`,
@@ -34,6 +39,11 @@ const shippingServices = (prefix: string) => ({
 	one: (id: number) => `${prefix}/shipping-service/${id}`
 })
 
+const discountRule = (prefix: string) => ({
+	all: `${prefix}/discount`,
+	one: (id: number) => `${prefix}/discount/${id}`
+})
+
 export const endpoints = {
 	BASE_URL,
 	PREFIX,
@@ -41,5 +51,7 @@ export const endpoints = {
 	categories: categories(`${BASE_URL}${PREFIX}`),
 	products: products(`${BASE_URL}${PREFIX}`),
 	posts: posts(`${BASE_URL}${PREFIX}`),
-	shippingServices: shippingServices(`${BASE_URL}${PREFIX}`)
+	shippingServices: shippingServices(`${BASE_URL}${PREFIX}`),
+	soato: soato(`${BASE_URL}${PREFIX}`),
+	discountRule: discountRule(`${BASE_URL}${PREFIX}`)
 }

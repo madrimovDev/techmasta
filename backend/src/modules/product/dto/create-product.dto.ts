@@ -1,12 +1,5 @@
-import {
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  Length,
-} from 'class-validator';
+import { IsNotEmpty, IsNumber, IsOptional, Length } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { ProductType } from '@prisma/client';
 import { Transform } from 'class-transformer';
 
 export class CreateProductDto {
@@ -43,13 +36,6 @@ export class CreateProductDto {
   categoryId: number;
 
   @ApiProperty({
-    description: 'Product type',
-    enum: ProductType,
-  })
-  @IsEnum(ProductType)
-  productType: ProductType;
-
-  @ApiProperty({
     description: 'Product poster',
     format: 'binary',
     type: 'string',
@@ -58,23 +44,9 @@ export class CreateProductDto {
   poster: any;
 
   @ApiProperty({
-    required: false,
-    description: 'Discount on the product',
     type: 'number',
   })
-  @IsOptional()
   @IsNumber()
   @Transform(({ value }) => Number(value))
-  discount?: number;
-
-  @ApiProperty({
-    required: false,
-    description:
-      'Discount applicable after purchasing a certain count of products',
-    type: 'number',
-  })
-  @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => Number(value))
-  discountAfterCount?: number;
+  discountRuleId: number;
 }

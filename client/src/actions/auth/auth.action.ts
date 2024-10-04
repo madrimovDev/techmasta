@@ -32,9 +32,13 @@ export interface Role {
 
 export const login = async (data: LoginRequest): Promise<string> => {
 	try {
-		const response = await apiClient.post<string>(authEndpoints.login, data)
-		Cookies.set('accessToken', response)
-		return response
+		const response = await apiClient.post<{ accessToken: string }>(
+			authEndpoints.login,
+			data
+		)
+		console.log(response)
+		Cookies.set('accessToken', response.accessToken)
+		return response.accessToken
 	} catch (e) {
 		return e as string
 	}
@@ -42,12 +46,15 @@ export const login = async (data: LoginRequest): Promise<string> => {
 
 export const register = async (data: RegisterRequest): Promise<string> => {
 	try {
-		const response = await apiClient.post<string>(authEndpoints.register, {
-			...data,
-			roleId: 2
-		})
-		Cookies.set('accessToken', response)
-		return response
+		const response = await apiClient.post<{ accessToken: string }>(
+			authEndpoints.register,
+			{
+				...data,
+				roleId: 2
+			}
+		)
+		Cookies.set('accessToken', response.accessToken)
+		return response.accessToken
 	} catch (e) {
 		return e as string
 	}

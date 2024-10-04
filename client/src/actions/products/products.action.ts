@@ -73,3 +73,20 @@ export const getProduct = async (id: number) => {
 	const response = await apiClient.get<Product>(productEndpoints.one(id))
 	return response
 }
+
+export const addRating = async ({
+	productId,
+	star
+}: {
+	productId: number
+	star: number
+}) => {
+	try {
+		const response = await apiClient.post(productEndpoints.rating(productId), {
+			star
+		})
+		return response
+	} catch (e) {
+		return e
+	}
+}

@@ -2,6 +2,7 @@ import { createBrowserRouter } from 'react-router-dom'
 import {
 	AuthPage,
 	CategoriesPage,
+	DiscountRulePage,
 	PostOfficePage,
 	PostPage,
 	PostsPage,
@@ -51,6 +52,10 @@ export const router: Router = createBrowserRouter([
 					{
 						path: 'shipping-services',
 						element: <SuspenseWithLoading element={<PostOfficePage />} />
+					},
+					{
+						path: 'discount-rule',
+						element: <SuspenseWithLoading element={<DiscountRulePage />} />
 					}
 				]
 			}

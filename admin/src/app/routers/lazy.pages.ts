@@ -12,3 +12,6 @@ export const PostPage = lazy(() => import('../../pages/posts/post.page'))
 export const PostOfficePage = lazy(
 	() => import('../../pages/shipping-services/shipping-services.page')
 )
+export const DiscountRulePage = lazy(
+	() => import('../../pages/discount-rule/discount-rule.page')
+)

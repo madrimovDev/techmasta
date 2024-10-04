@@ -64,6 +64,11 @@ export const Orders = () => {
 			<Divider className='my-8' />
 			<div className='grid grid-cols-12 gap-8'>
 				<div className='col-span-9 flex flex-col gap-4'>
+					{!data.orderItem.length && (
+						<p className='text-center text-2xl font-bold opacity-50'>
+							Sizning Savatingiz bo&apos;sh
+						</p>
+					)}
 					{data?.orderItem?.map((item) => (
 						<OrderItemCard
 							key={item.id}

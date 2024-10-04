@@ -5,7 +5,6 @@ import { UsersService } from '../users';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigService } from '@nestjs/config';
 import { AuthController } from './auth.controller';
-import { RolesService } from '../roles';
 import { LocalStrategy } from './strategies/local.strategy';
 import { VerificatedUserService } from '../verificated-user/verificated-user.service';
 
@@ -18,7 +17,6 @@ import { VerificatedUserService } from '../verificated-user/verificated-user.ser
     AuthService,
     UsersService,
     ConfigService,
-    RolesService,
     VerificatedUserService,
   ],
 })

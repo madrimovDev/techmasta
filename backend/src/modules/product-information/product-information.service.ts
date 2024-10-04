@@ -28,8 +28,9 @@ export class ProductInformationService {
       },
     });
 
-    if (!info)
+    if (!info) {
       throw new NotFoundException(`Product information ${id} not found`);
+    }
 
     return this.prismaService.productInformation.update({
       where: {
@@ -44,8 +45,9 @@ export class ProductInformationService {
       where: { id },
     });
 
-    if (!info)
+    if (!info) {
       throw new NotFoundException(`Product information ${id} not found`);
+    }
 
     return this.prismaService.productInformation.delete({ where: { id } });
   }

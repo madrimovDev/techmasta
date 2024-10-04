@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { PrismaService } from '../../common';
 import { DeliveryStatus, PaymentStatus } from '@prisma/client';
@@ -21,15 +25,31 @@ export class OrderService {
       throw new BadRequestException('Order already exists');
     }
 
+    const products = await this.prismaService.product.findMany({
+      where: {
+        id: { in: createOrderDto.items.map((item) => item.productId) },
+      },
+      include: {
+        discountRule: true,
+      },
+    });
+
+    if (!products.length) {
+      throw new BadRequestException('Products not found');
+    }
+
     return this.prismaService.order.create({
       data: {
         userId,
         shippingServiceId: createOrderDto.shippingServiceId,
         orderItem: {
           createMany: {
-            data: createOrderDto.items.map((item) => ({
-              productId: item.productId,
-              quantity: item.quantity,
+            data: products.map((item) => ({
+              productId: item.id,
+              quantity: 1,
+              priceAtTime: item.price,
+              discountAtTime: item.discountRule?.discountValue,
+              minimumQuantityAtTime: item.discountRule?.minimumQuantity,
             })),
           },
         },
@@ -49,8 +69,8 @@ export class OrderService {
     });
   }
 
-  findOne(id: number) {
-    return this.prismaService.order.findUnique({
+  async findOne(id: number) {
+    const order = await this.prismaService.order.findUnique({
       where: { id },
       include: {
         orderItem: {
@@ -60,6 +80,8 @@ export class OrderService {
         shippingService: true,
       },
     });
+    if (!order) throw new NotFoundException(`Order with id ${id} not found`);
+    return order;
   }
 
   findUserCart(userId: number) {
@@ -101,11 +123,26 @@ export class OrderService {
   }
 
   async addItemToOrder(orderId: number, productId: number, quantity: number) {
+    await this.findOne(orderId);
+    const product = await this.prismaService.product.findUnique({
+      where: { id: productId },
+      include: {
+        discountRule: true,
+      },
+    });
+
+    if (!product) {
+      throw new NotFoundException(`Product with id ${productId} not found`);
+    }
+
     return this.prismaService.orderItem.create({
       data: {
-        orderId,
         productId,
+        orderId,
         quantity,
+        priceAtTime: product.price,
+        discountAtTime: product.discountRule?.discountValue,
+        minimumQuantityAtTime: product.discountRule?.minimumQuantity,
       },
     });
   }
@@ -176,30 +213,6 @@ export class OrderService {
     return this.prismaService.order.update({
       where: { id: orderId },
       data: { shippingServiceId },
-    });
-  }
-
-  async createOrderWithTransaction(
-    userId: number,
-    createOrderDto: CreateOrderDto,
-  ) {
-    return this.prismaService.$transaction(async (prisma) => {
-      const order = await prisma.order.create({
-        data: {
-          userId,
-          shippingServiceId: createOrderDto.shippingServiceId,
-          orderItem: {
-            createMany: {
-              data: createOrderDto.items.map((item) => ({
-                productId: item.productId,
-                quantity: item.quantity,
-              })),
-            },
-          },
-        },
-      });
-
-      return order;
     });
   }
 }

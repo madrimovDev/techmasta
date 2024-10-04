@@ -10,7 +10,6 @@ import { LoginDto, RegisterDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
 import { excludeProperties } from '../../common';
 import { ConfigService } from '@nestjs/config';
-import { RolesService } from '../roles';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -23,23 +22,17 @@ export class AuthService {
     private userService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
-    private roleService: RolesService,
     private verificatedUserService: VerificatedUserService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register({ soatoCode, ...registerDto }: RegisterDto) {
     try {
-      const role = await this.roleService.findOne(registerDto.roleId);
-      if (role && role.name.toLowerCase() === 'admin')
-        throw new UnauthorizedException();
       const isExistsUsername = await this.userService.findByUsername(
         registerDto.username,
       );
-
       if (isExistsUsername) {
         throw new BadRequestException('Username already exists');
       }
-
       const isExistsPhone =
         registerDto.phone &&
         (await this.userService.findByPhoneNumber(registerDto.phone));
@@ -52,6 +45,7 @@ export class AuthService {
 
       const newUser = await this.userService.create({
         ...registerDto,
+        soatoId: soatoCode,
         password,
       });
       const otp = this.createOTP();
@@ -59,6 +53,7 @@ export class AuthService {
       console.log('User OTP', otp);
       return this.generateTokens(newUser);
     } catch (error) {
+      console.log(error);
       if (error instanceof PrismaClientKnownRequestError) {
         throw new UnauthorizedException();
       }
@@ -82,23 +77,6 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
-  async verifyAccessToken(token: string) {
-    try {
-      const decoded = this.jwtService.verify(token, {
-        secret: this.configService.get<string>('JWT_ACCESS_SECRET'),
-      });
-      const user = await this.userService.findById(decoded.id);
-      if (!user) {
-        throw new UnauthorizedException('Invalid token');
-      }
-      return {
-        accessToken: token,
-      };
-    } catch (error) {
-      throw new UnauthorizedException('Invalid token');
-    }
-  }
-
   async refreshAccessToken(refreshToken: string) {
     try {
       const decoded = this.jwtService.verify(refreshToken, {
@@ -117,6 +95,9 @@ export class AuthService {
   }
 
   async verifyUser(userId: number, otp: string) {
+    const isVerified = await this.verificatedUserService.findOne(userId);
+
+    if (isVerified) throw new BadRequestException('User already verified');
     const cachedOTP = await this.cacheManager.get<string>(`otp:${userId}`);
     if (!cachedOTP) {
       throw new UnauthorizedException('OTP wrong or expired');

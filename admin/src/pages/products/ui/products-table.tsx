@@ -1,4 +1,4 @@
-import { Badge, Button, Image, Table, Tooltip, Typography } from 'antd'
+import { Button, Image, Table, Tooltip, Typography } from 'antd'
 import { DeleteButton, TableHeader } from '../../../shared/ui'
 import { useProductModal } from '../utils/useProductModal.ts'
 import {
@@ -112,24 +112,7 @@ const ProductsTable = () => {
 							return value.name
 						}
 					},
-					{
-						key: 'type',
-						title: 'Tovar Turi',
-						filters: [
-							{
-								value: 'HARDWARE',
-								text: 'Qurilma / Extiyot qism'
-							},
-							{
-								value: 'SOFTWARE',
-								text: 'Dastur'
-							}
-						],
-						onFilter(value, product) {
-							return product.productType === value
-						},
-						dataIndex: 'productType'
-					},
+
 					{
 						key: 'rating',
 						title: 'Rating',
@@ -188,7 +171,6 @@ const ProductsTable = () => {
 					{
 						key: 'comments',
 						title: 'Izohlar',
-
 						dataIndex: 'productComment',
 						render(value, product) {
 							return (
@@ -204,22 +186,15 @@ const ProductsTable = () => {
 						}
 					},
 					{
-						key: 'url',
-						title: 'Dastur',
-						dataIndex: 'url',
-						render(value, prod) {
-							return prod.productType === 'HARDWARE' ? (
-								''
-							) : value ? (
-								<Badge
-									status='success'
-									text='Mavjud'
-								/>
-							) : (
-								<Badge
-									status='error'
-									text='Mavjud emas'
-								/>
+						key: 'discount',
+						title: 'Chegirma',
+						dataIndex: 'discountRule',
+						render(value) {
+							if (!value) return '-'
+							return (
+								<span className='space-x-2'>
+									<span>{value?.name}</span>
+								</span>
 							)
 						}
 					},

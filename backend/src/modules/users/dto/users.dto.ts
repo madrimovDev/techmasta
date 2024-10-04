@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsOptional, IsString, Length, Min } from 'class-validator';
+import { IsOptional, IsString, Length } from 'class-validator';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateUserDto {
@@ -16,10 +16,6 @@ export class CreateUserDto {
   @Length(3, 20)
   password: string;
   @ApiProperty()
-  @IsInt()
-  @Min(0)
-  roleId: number;
-  @ApiProperty()
   @IsString()
   @Length(3, 20)
   @IsOptional()
@@ -29,6 +25,9 @@ export class CreateUserDto {
   @Length(3, 20)
   @IsOptional()
   address?: string;
+  @ApiProperty()
+  @IsString()
+  soatoId?: string;
 }
 
 export class UpdateUserDto extends PartialType(CreateUserDto) {}

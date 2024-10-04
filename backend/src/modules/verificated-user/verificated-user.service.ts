@@ -20,4 +20,12 @@ export class VerificatedUserService {
     });
     return verificatedUser;
   }
+
+  async findOne(id: number): Promise<VerificatedUser> {
+    const verifiedUser = await this.prismaService.verificatedUser.findUnique({
+      where: { userId: id },
+    });
+
+    return verifiedUser;
+  }
 }

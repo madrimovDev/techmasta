@@ -1,10 +1,11 @@
 import { DeleteButton, EditButton, TableHeader } from '../../../shared/ui'
-import { Button, Table } from 'antd'
+import { Button, Table, Tag, Tooltip } from 'antd'
 import {
 	useDeleteShippingService,
 	useGetShippingServices
 } from '../utils/shipping-service.query.ts'
 import { useShippingServiceModal } from '../utils/useShippingServiceModal.ts'
+import { Soato } from '../../../app/query'
 
 export const ShippingServicesTable = () => {
 	const shippingServices = useGetShippingServices()
@@ -44,6 +45,34 @@ export const ShippingServicesTable = () => {
 						key: 'price',
 						title: 'Baxosi',
 						dataIndex: 'price'
+					},
+					{
+						key: 'soato',
+						title: 'Filiallar',
+						dataIndex: 'soato',
+						width: 400,
+						render(soato: Soato[]) {
+							return (
+								<Tooltip
+									title={
+										<div className='flex flex-wrap gap-1'>
+											{soato.map(s => (
+												<Tag
+													key={s.code}
+													className='mr-0'
+												>
+													{s.name}
+												</Tag>
+											))}
+										</div>
+									}
+								>
+									<div className='line-clamp-2'>
+										{soato.map(s => `${s.name}, `)}
+									</div>
+								</Tooltip>
+							)
+						}
 					},
 					{
 						key: 'actions',

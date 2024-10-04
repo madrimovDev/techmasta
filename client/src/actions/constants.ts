@@ -35,5 +35,10 @@ export const productImage = {
 
 export const shippingServiceEndpoints = {
 	all: `/shipping-service`,
-	one: (id: number) => `/shipping-service/${id}`,
+	one: (id: number) => `/shipping-service/${id}`
+}
+
+export const soatoEndpoints = {
+	region: `/soato`,
+	district: (regionCode: string) => `/soato?regionCode=${regionCode}`
 }

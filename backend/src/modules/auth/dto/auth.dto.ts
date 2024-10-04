@@ -1,11 +1,9 @@
 import {
-  IsInt,
   IsNotEmpty,
   IsNumberString,
   IsOptional,
   IsString,
   Length,
-  Min,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -31,9 +29,8 @@ export class RegisterDto {
   @IsOptional()
   phone?: string;
   @ApiProperty()
-  @IsInt()
-  @Min(0)
-  roleId: number;
+  @IsString()
+  soatoCode: string;
 }
 
 export class LoginDto {

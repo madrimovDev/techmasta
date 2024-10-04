@@ -1,7 +1,6 @@
 import { Flex, Image, List, Space, Typography, Upload } from 'antd'
 import { endpoints } from '../../../app/http'
 import { Product, useUpdateProduct } from '../utils/products.query.ts'
-import { EditableSelect } from '../../../shared/ui'
 
 interface Props {
 	product?: Product
@@ -26,8 +25,8 @@ const ProductBaseInformation = ({ product }: Props) => {
 				}}
 			>
 				<Image
-					width={200}
-					height={200}
+					width={140}
+					height={140}
 					preview={false}
 					className='object-cover'
 					src={
@@ -63,19 +62,12 @@ const ProductBaseInformation = ({ product }: Props) => {
 					size='small'
 					dataSource={Object.entries(product ?? {})}
 					renderItem={item => {
-						const includeKeys = [
-							'name',
-							'description',
-							'price',
-							'category',
-							'productType'
-						]
+						const includeKeys = ['name', 'description', 'price', 'category']
 						const translated: Record<string, string> = {
 							name: 'Nomi',
 							description: 'Izoh',
 							price: 'Baxosi',
-							category: 'Katalog',
-							productType: 'Tovar Turi'
+							category: 'Katalog'
 						}
 						if (!includeKeys.includes(item[0])) return
 						return (
@@ -84,48 +76,48 @@ const ProductBaseInformation = ({ product }: Props) => {
 								key={item[0]}
 							>
 								<Space size='large'>
-									<Typography.Text className='font-bold'>
+									<Typography.Text className='font-bold w-[60px] inline-block'>
 										{translated[item[0]]}:
 									</Typography.Text>
-									{item[0] === 'productType' ? (
-										<EditableSelect
-											options={[
-												{
-													label: 'SOFTWARE',
-													value: 'SOFTWARE'
-												},
-												{
-													label: 'HARDWARE',
-													value: 'HARDWARE'
-												}
-											]}
-											onChange={value => {
+									<Typography.Text
+										editable={{
+											triggerType: ['text'],
+											text: item[1].toString(),
+											onChange(value) {
 												if (!product?.id) return
 												update.mutate({
 													id: product.id,
 													[item[0]]: value
 												})
-											}}
-										>
-											{item[1]}
-										</EditableSelect>
-									) : (
-										<Typography.Text
-											editable={{
-												triggerType: ['text'],
-												text: item[1].toString(),
-												onChange(value) {
-													if (!product?.id) return
-													update.mutate({
-														id: product.id,
-														[item[0]]: value
-													})
-												}
-											}}
-										>
-											{item[1]}
-										</Typography.Text>
-									)}
+											}
+										}}
+									>
+										{item[1]}
+									</Typography.Text>
+								</Space>
+							</List.Item>
+						)
+					}}
+				/>
+				<List
+					className='w-full'
+					size='small'
+					header={'Chegirma'}
+					dataSource={Object.entries(product?.discountRule ?? {})}
+					renderItem={([key, value]) => {
+						const includedKeys = ['name', 'description', 'discountValue']
+						if (!key || !value) return
+						if (!includedKeys.includes(key)) return
+						return (
+							<List.Item
+								className='px-0'
+								key={key}
+							>
+								<Space size='large'>
+									<Typography.Text className='font-bold w-[80px] inline-block'>
+										{key === 'name' ? 'Nomi' : 'Chegirma'}:
+									</Typography.Text>
+									<Typography.Text>{value}</Typography.Text>
 								</Space>
 							</List.Item>
 						)

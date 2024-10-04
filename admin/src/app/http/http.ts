@@ -4,7 +4,8 @@ import { endpoints } from './constants'
 
 // create an axios instance
 const http = axios.create({
-	baseURL: import.meta.env.VITE_APP_BASE_URL
+	baseURL: import.meta.env.VITE_APP_BASE_URL,
+	withCredentials: true
 })
 
 // request interceptor to add the authorization header
@@ -30,22 +31,12 @@ http.interceptors.response.use(
 		if (
 			error.response &&
 			error.response.status === 401 &&
+			error.response.data.message === 'Token has expired' &&
 			!originalRequest._isRetry
 		) {
 			originalRequest._isRetry = true
-			const refreshToken = localStorage.getItem('refreshToken')
-			if (!refreshToken) {
-				// If there's no refresh token, remove any tokens and redirect to auth page
-				localStorage.removeItem('accessToken')
-				localStorage.removeItem('refreshToken')
-				window.location.href = '/auth' // Use this if you are not using react-router-dom
-				return Promise.reject(error)
-			}
-
 			try {
-				const response = await axios.post(endpoints.auth.refresh, {
-					refreshToken: refreshToken
-				})
+				const response = await axios.get(endpoints.auth.refresh)
 
 				const newAccessToken = response.data.accessToken
 				localStorage.setItem('accessToken', newAccessToken)

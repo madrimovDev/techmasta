@@ -4,10 +4,11 @@ import { ProductInfo } from '@/app/products/[id]/_components/product-info'
 import { ProductComments } from '@/app/products/[id]/_components/product-comments'
 import { useQuery } from '@tanstack/react-query'
 import { getProduct } from '@/actions/products/products.action'
+import { productEndpoints } from '@/actions/constants'
 
 const Page = ({ params }: { params: { id: string } }) => {
 	const { data: product, isLoading } = useQuery({
-		queryKey: ['product', params],
+		queryKey: [productEndpoints.one(+params.id)],
 		queryFn: () => getProduct(+params.id)
 	})
 
